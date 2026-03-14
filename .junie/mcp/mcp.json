@@ -1,14 +1,14 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "php",
+            "command": "/Users/tomasdoudera/Library/Application Support/Herd/bin/php84",
             "args": [
-                "artisan",
+                "/Users/tomasdoudera/Documents/GitHub/grizlex-demo-calendar/artisan",
                 "boost:mcp"
             ]
         },
         "herd": {
-            "command": "php",
+            "command": "/Users/tomasdoudera/Library/Application Support/Herd/bin/php84",
             "args": [
                 "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
             ],

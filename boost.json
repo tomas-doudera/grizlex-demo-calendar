@@ -1,13 +1,18 @@
 {
     "agents": [
-        "cursor"
+        "cursor",
+        "claude_code",
+        "opencode",
+        "junie"
     ],
     "guidelines": true,
     "herd_mcp": true,
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
-        "livewire/blaze"
+        "livewire/blaze",
+        "filament/filament",
+        "filament/blueprint"
     ],
     "sail": false,
     "skills": [
