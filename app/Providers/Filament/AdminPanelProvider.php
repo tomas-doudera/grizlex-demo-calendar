@@ -30,9 +30,16 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
+            ->font('Inter')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Zinc,
+                'gray' => Color::Zinc,
+                'danger' => Color::Rose,
+                'success' => Color::Emerald,
+                'info' => Color::Sky,
+                'warning' => Color::Amber,
             ])
+            ->brandName('Grizlex')
             ->plugin(CalMePlugin::make())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

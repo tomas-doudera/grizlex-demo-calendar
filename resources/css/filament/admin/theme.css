@@ -4,5 +4,179 @@
 @source '../../../../resources/views/filament/**/*';
 @source '../../../../vendor/tomas-doudera/cal-me/resources/views/**/*';
 
+/* ============================================================
+   shadcn-inspired Filament Theme
+   Monochrome, clean, professional — with full dark mode support
+   ============================================================ */
 
+/* --- Layout & Body --- */
+.fi-body {
+    @apply !bg-zinc-50 dark:!bg-zinc-950;
+}
 
+/* --- Topbar --- */
+.fi-topbar {
+    @apply !shadow-none !ring-0 border-b border-zinc-200 dark:border-zinc-800;
+}
+
+/* --- Sidebar --- */
+.fi-sidebar {
+    @apply dark:!bg-zinc-950;
+}
+
+.fi-body-has-topbar .fi-sidebar-header {
+    @apply !shadow-none !ring-0 border-b border-zinc-200 dark:border-zinc-800 dark:!bg-zinc-950;
+}
+
+.fi-sidebar-nav {
+    @apply gap-y-5 py-6;
+}
+
+.fi-sidebar-group-label {
+    @apply !text-xs !uppercase !tracking-wider !font-semibold !text-zinc-400 dark:!text-zinc-500;
+}
+
+.fi-sidebar-item-btn {
+    @apply !rounded-md;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply !bg-zinc-900 dark:!bg-zinc-100;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    @apply !text-white dark:!text-zinc-900;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    @apply !text-white dark:!text-zinc-900;
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn {
+    @apply hover:!bg-zinc-100 focus-visible:!bg-zinc-100 dark:hover:!bg-zinc-800 dark:focus-visible:!bg-zinc-800;
+}
+
+.fi-sidebar-item-label {
+    @apply !text-sm;
+}
+
+/* --- Sections / Cards --- */
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+.fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-section-has-header:not(.fi-collapsed) > .fi-section-content-ctn {
+    @apply !border-zinc-200 dark:!border-zinc-800;
+}
+
+.fi-section > .fi-section-content-ctn > .fi-section-footer {
+    @apply !border-zinc-200 dark:!border-zinc-800;
+}
+
+.fi-section .fi-section-header-heading {
+    @apply !text-sm !font-semibold;
+}
+
+.fi-section .fi-section-header-description {
+    @apply !text-xs;
+}
+
+/* --- Buttons --- */
+.fi-btn {
+    @apply !rounded-md;
+}
+
+.fi-btn:not(.fi-outlined).fi-color:not(label) {
+    @apply !shadow-none;
+}
+
+/* --- Inputs --- */
+.fi-input-wrp {
+    @apply !rounded-md !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
+}
+
+.fi-input-wrp:focus-within {
+    @apply !ring-2 !ring-zinc-900 dark:!ring-zinc-300;
+}
+
+/* --- Tables --- */
+.fi-ta-ctn {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+.fi-ta-header-cell {
+    @apply !text-xs !uppercase !tracking-wider !font-medium !text-zinc-500 dark:!text-zinc-400;
+}
+
+.fi-ta-row {
+    @apply !border-zinc-100 dark:!border-zinc-800;
+}
+
+.fi-ta-row:hover {
+    @apply !bg-zinc-50 dark:!bg-zinc-900/50;
+}
+
+/* --- Modal --- */
+.fi-modal-content {
+    @apply !rounded-lg !shadow-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
+}
+
+/* --- Simple / Login Page --- */
+.fi-simple-main {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 sm:!rounded-lg dark:!ring-zinc-800;
+}
+
+/* --- Tabs --- */
+.fi-tabs {
+    @apply !rounded-md;
+}
+
+/* --- Badge refinements --- */
+.fi-badge {
+    @apply !rounded-md;
+}
+
+/* --- Dropdown --- */
+.fi-dropdown-panel {
+    @apply !rounded-md !shadow-md !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
+}
+
+/* --- Stats widget --- */
+.fi-wi-stats-overview-stat {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+/* --- Chart widgets --- */
+.fi-wi-chart {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+/* --- Sidebar close overlay --- */
+.fi-sidebar-close-overlay {
+    @apply !bg-zinc-950/40 dark:!bg-zinc-950/60;
+}
+
+/* --- Pagination --- */
+.fi-pagination-items .fi-btn {
+    @apply !rounded-md;
+}
+
+/* --- Header breadcrumbs --- */
+.fi-header-heading {
+    @apply !text-xl !font-semibold !tracking-tight;
+}
+
+/* --- Notification refinements --- */
+.fi-no-notification {
+    @apply !rounded-lg !shadow-md !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+/* --- Fieldset --- */
+.fi-fieldset {
+    @apply !rounded-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+/* --- Aside section content --- */
+.fi-section.fi-aside > .fi-section-content-ctn {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
