@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             PlaceSeeder::class,
             ReservationSeeder::class,
+            ShowcaseSeeder::class,
         ]);
     }
 }
