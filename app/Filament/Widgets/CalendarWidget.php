@@ -5,11 +5,12 @@ namespace App\Filament\Widgets;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use Carbon\CarbonInterface;
 use Closure;
 use Filament\Actions\Action;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Fieldset;
@@ -32,25 +33,25 @@ class CalendarWidget extends CalMeWidget
                 ->label('Date')
                 ->default(now())
                 ->native(false)
-                ->reactive(),
+                ->live(),
 
             Select::make('company_id')
                 ->label('Company')
                 ->default(fn () => Company::query()->first()?->id)
                 ->options(fn () => Company::query()->pluck('title', 'id')->toArray())
                 ->required()
-                ->disablePlaceholderSelection()
-                ->reactive()
-                ->afterStateUpdated(function ($set, $state) {
+                ->selectablePlaceholder(false)
+                ->live()
+                ->afterStateUpdated(function (Set $set, ?string $state): void {
                     $set('place_ids', Place::where('company_id', $state ?? null)->pluck('id')->toArray());
                 }),
 
             CheckboxList::make('place_ids')
                 ->label('Place')
-                ->default(fn ($get) => Place::where('company_id', $get('company_id'))->pluck('id')->toArray())
-                ->options(fn ($get) => Place::where('company_id', $get('company_id'))->pluck('title', 'id')->toArray())
+                ->default(fn (Get $get) => Place::where('company_id', $get('company_id'))->pluck('id')->toArray())
+                ->options(fn (Get $get) => Place::where('company_id', $get('company_id'))->pluck('title', 'id')->toArray())
                 ->bulkToggleable()
-                ->reactive(),
+                ->live(),
         ]);
     }
 
@@ -87,7 +88,7 @@ class CalendarWidget extends CalMeWidget
                                 ->label('Place')
                                 ->options(Place::pluck('title', 'id'))
                                 ->default($arguments['resource_id'] ?? null)
-                                ->reactive()
+                                ->live()
                                 ->required(),
                         ]),
                     Fieldset::make('Time')
@@ -98,10 +99,10 @@ class CalendarWidget extends CalMeWidget
                                 ->native(false)
                                 ->withoutSeconds()
                                 ->minutesStep(5)
-                                ->reactive()
+                                ->live()
                                 ->required()
-                                ->afterStateUpdated(function ($livewire, $get, $set, $state, $old) {
-                                    $livewire->recalculateToTime($get, $set, Carbon::parse($old ?? $state));
+                                ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old): void {
+                                    $this->recalculateToTime($get, $set, Carbon::parse($old ?? $state));
                                 }),
                             DateTimePicker::make('to_time')
                                 ->label('End')
@@ -109,10 +110,10 @@ class CalendarWidget extends CalMeWidget
                                 ->native(false)
                                 ->withoutSeconds()
                                 ->minutesStep(5)
-                                ->reactive()
+                                ->live()
                                 ->required()
                                 ->rules([
-                                    function ($get) {
+                                    function (Get $get) {
                                         return function (string $attribute, $value, Closure $fail) use ($get) {
                                             $fromTime = Carbon::parse($get('from_time'));
                                             $toTime = Carbon::parse($value);
@@ -135,7 +136,7 @@ class CalendarWidget extends CalMeWidget
                     TextInput::make('booked_count')
                         ->numeric()
                         ->minValue(0)
-                        ->maxValue(fn ($get) => $get('capacity'))
+                        ->maxValue(fn (Get $get) => $get('capacity'))
                         ->nullable(),
                 ])->columns(2),
         ];
@@ -167,7 +168,7 @@ class CalendarWidget extends CalMeWidget
         ];
     }
 
-    protected function validateUpdate(Carbon $fromTime, Carbon $toTime, int $eventId, int $resourceId): bool
+    protected function validateUpdate(CarbonInterface $fromTime, CarbonInterface $toTime, int $eventId, int $resourceId): bool
     {
         $overlaps = Reservation::where('id', '!=', $eventId)
             ->where('place_id', $resourceId)
