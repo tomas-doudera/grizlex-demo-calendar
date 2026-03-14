@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function configureDefaults(): void
     {
-        Date::use(CarbonImmutable::class);
+        // Date::use(CarbonImmutable::class); // Bug in Carbon Immutable - must be fixed
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
