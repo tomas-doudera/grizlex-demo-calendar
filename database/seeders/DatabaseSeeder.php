@@ -13,12 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        if (! User::where('email', 'info@grizlex.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Admin',
+                'email' => 'info@grizlex.com',
+                'password' => bcrypt('admin'),
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'info@grizlex.com',
-            'password' => bcrypt('admin'),
+        $this->call([
+            CompanySeeder::class,
+            PlaceSeeder::class,
+            ReservationSeeder::class,
         ]);
     }
 }
