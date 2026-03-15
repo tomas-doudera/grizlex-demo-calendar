@@ -2,28 +2,30 @@
 
 namespace App\Models;
 
-use Database\Factories\PlaceFactory;
+use App\Enums\StaffRole;
+use Database\Factories\StaffFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Place extends Model
+class Staff extends Model
 {
-    /** @use HasFactory<PlaceFactory> */
+    /** @use HasFactory<StaffFactory> */
     use HasFactory;
 
+    protected $table = 'staff';
+
     protected $fillable = [
-        'company_id', 'title', 'short_title', 'description', 'type',
-        'capacity', 'hourly_rate', 'color', 'is_active', 'amenities', 'sort_order',
+        'company_id', 'first_name', 'last_name', 'email', 'phone',
+        'role', 'specialization', 'bio', 'is_active', 'avatar_url',
     ];
 
     protected function casts(): array
     {
         return [
+            'role' => StaffRole::class,
             'is_active' => 'boolean',
-            'hourly_rate' => 'decimal:2',
-            'amenities' => 'array',
         ];
     }
 
@@ -35,5 +37,10 @@ class Place extends Model
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }

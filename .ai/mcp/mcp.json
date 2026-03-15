@@ -6,6 +6,15 @@
         "artisan",
         "boost:mcp"
       ]
+    },
+    "herd": {
+      "command": "/Users/tomasdoudera/Library/Application Support/Herd/bin/php84",
+      "args": [
+        "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
+      ],
+      "env": {
+        "SITE_PATH": "/Users/tomasdoudera/Documents/GitHub/grizlex-demo-calendar"
+      }
     }
   }
 }

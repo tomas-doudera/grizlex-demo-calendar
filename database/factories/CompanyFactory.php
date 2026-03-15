@@ -10,15 +10,20 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class CompanyFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'title' => $this->faker->company(),
+            'title' => fake()->company(),
+            'description' => fake()->paragraph(),
+            'email' => fake()->companyEmail(),
+            'phone' => fake()->phoneNumber(),
+            'website' => fake()->optional()->url(),
+            'address' => fake()->streetAddress(),
+            'city' => fake()->city(),
+            'country' => fake()->randomElement(['US', 'UK', 'DE', 'CZ']),
+            'is_active' => true,
+            'opening_time' => '08:00',
+            'closing_time' => '20:00',
         ];
     }
 }

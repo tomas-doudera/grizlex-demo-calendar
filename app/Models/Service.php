@@ -2,28 +2,27 @@
 
 namespace App\Models;
 
-use Database\Factories\PlaceFactory;
+use Database\Factories\ServiceFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Place extends Model
+class Service extends Model
 {
-    /** @use HasFactory<PlaceFactory> */
+    /** @use HasFactory<ServiceFactory> */
     use HasFactory;
 
     protected $fillable = [
-        'company_id', 'title', 'short_title', 'description', 'type',
-        'capacity', 'hourly_rate', 'color', 'is_active', 'amenities', 'sort_order',
+        'company_id', 'name', 'description', 'duration_minutes',
+        'price', 'color', 'is_active', 'max_participants', 'sort_order',
     ];
 
     protected function casts(): array
     {
         return [
+            'price' => 'decimal:2',
             'is_active' => 'boolean',
-            'hourly_rate' => 'decimal:2',
-            'amenities' => 'array',
         ];
     }
 
