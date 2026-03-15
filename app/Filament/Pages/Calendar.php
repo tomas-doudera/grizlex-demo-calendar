@@ -12,6 +12,10 @@ class Calendar extends Page
 
     protected static ?string $navigationLabel = 'Calendar';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
+
+    protected static ?int $navigationSort = 0;
+
     protected string $view = 'filament.pages.calendar';
 
     protected function getFooterWidgets(): array

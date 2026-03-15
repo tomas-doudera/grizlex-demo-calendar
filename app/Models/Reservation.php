@@ -65,4 +65,47 @@ class Reservation extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
+    public function getTitleAttribute(): string
+    {
+        $parts = [];
+
+        if ($this->relationLoaded('service') && $this->service) {
+            $parts[] = $this->service->name;
+        }
+
+        if ($this->relationLoaded('staff') && $this->staff) {
+            $parts[] = $this->staff->first_name;
+        }
+
+        if (empty($parts) && $this->guest_name) {
+            $parts[] = $this->guest_name;
+        }
+
+        if (empty($parts)) {
+            $parts[] = $this->status?->getLabel() ?? 'Available';
+        }
+
+        return implode(' · ', $parts);
+    }
+
+    public function getColorAttribute(): ?string
+    {
+        if ($this->relationLoaded('service') && $this->service?->color) {
+            return $this->service->color;
+        }
+
+        if ($this->relationLoaded('place') && $this->place?->color) {
+            return $this->place->color;
+        }
+
+        return null;
+    }
+
+    public function getStyleAttribute(): string
+    {
+        $color = $this->color ?? '#3b82f6';
+
+        return "--cal-event-color: {$color}";
+    }
 }

@@ -380,3 +380,36 @@
 .fi-in-entry-wrp {
     @apply !gap-y-1;
 }
+
+/* ─── Calendar events — soft tinted backgrounds with left accent ─── */
+.cal-event {
+    @apply !border-0 !border-l-[3px] !rounded-md !overflow-hidden;
+    border-left-color: var(--cal-event-color, #3b82f6) !important;
+}
+
+.cal-event-content {
+    @apply !p-1.5 !opacity-100 dark:!opacity-90;
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 15%, white) !important;
+}
+
+:is(.dark) .cal-event-content {
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 25%, rgb(24 24 27)) !important;
+}
+
+.cal-event-content small {
+    @apply !text-[10px] !leading-tight !font-medium;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 80%, black) !important;
+}
+
+:is(.dark) .cal-event-content small {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 60%, white) !important;
+}
+
+.cal-event-content p {
+    @apply !text-[11px] !leading-tight !font-semibold !mt-0.5;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 90%, black) !important;
+}
+
+:is(.dark) .cal-event-content p {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}

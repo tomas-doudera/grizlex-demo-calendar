@@ -2,17 +2,22 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\ReservationStatus;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Models\Service;
+use App\Models\Staff;
 use Carbon\CarbonInterface;
 use Closure;
 use Filament\Actions\Action;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
@@ -72,24 +77,47 @@ class CalendarWidget extends CalMeWidget
 
     protected function createEventFrom(array $arguments): array
     {
+        $companyId = $this->getCompanyId();
+
         return [
             Grid::make()
                 ->schema([
-                    Fieldset::make('Basic information')
+                    Fieldset::make('Booking Details')
                         ->schema([
                             Select::make('company_id')
                                 ->label('Company')
                                 ->options(Company::pluck('title', 'id'))
-                                ->default($this->getCompanyId())
+                                ->default($companyId)
                                 ->disabled()
                                 ->dehydrated()
                                 ->required(),
                             Select::make('place_id')
-                                ->label('Place')
-                                ->options(Place::pluck('title', 'id'))
+                                ->label('Venue')
+                                ->options(Place::where('company_id', $companyId)->pluck('title', 'id'))
                                 ->default($arguments['resource_id'] ?? null)
                                 ->live()
                                 ->required(),
+                            Select::make('service_id')
+                                ->label('Service')
+                                ->options(Service::where('company_id', $companyId)->pluck('name', 'id'))
+                                ->searchable()
+                                ->preload()
+                                ->live()
+                                ->afterStateUpdated(function (Get $get, Set $set, ?string $state): void {
+                                    if ($state) {
+                                        $service = Service::find($state);
+                                        if ($service && $get('from_time')) {
+                                            $from = Carbon::parse($get('from_time'));
+                                            $set('to_time', $from->addMinutes($service->duration_minutes)->toDateTimeString());
+                                            $set('total_price', $service->price);
+                                        }
+                                    }
+                                }),
+                            Select::make('staff_id')
+                                ->label('Staff')
+                                ->options(Staff::where('company_id', $companyId)->get()->mapWithKeys(fn (Staff $s) => [$s->id => "{$s->first_name} {$s->last_name}"]))
+                                ->searchable()
+                                ->preload(),
                         ]),
                     Fieldset::make('Time')
                         ->schema([
@@ -126,7 +154,7 @@ class CalendarWidget extends CalMeWidget
                         ]),
                 ])
                 ->columns(2),
-            Fieldset::make('Capacity')
+            Fieldset::make('Capacity & Pricing')
                 ->schema([
                     TextInput::make('capacity')
                         ->numeric()
@@ -138,7 +166,28 @@ class CalendarWidget extends CalMeWidget
                         ->minValue(0)
                         ->maxValue(fn (Get $get) => $get('capacity'))
                         ->nullable(),
-                ])->columns(2),
+                    TextInput::make('total_price')
+                        ->label('Price')
+                        ->numeric()
+                        ->prefix('$')
+                        ->nullable(),
+                    ToggleButtons::make('status')
+                        ->options(ReservationStatus::class)
+                        ->default('pending')
+                        ->inline()
+                        ->columnSpanFull(),
+                ])->columns(3),
+            Fieldset::make('Guest Information')
+                ->schema([
+                    TextInput::make('guest_name'),
+                    TextInput::make('guest_email')
+                        ->email(),
+                    TextInput::make('guest_phone')
+                        ->tel(),
+                    Textarea::make('notes')
+                        ->rows(2)
+                        ->columnSpanFull(),
+                ])->columns(3),
         ];
     }
 
@@ -195,6 +244,7 @@ class CalendarWidget extends CalMeWidget
         }
 
         return Reservation::query()
+            ->with(['service', 'staff', 'place'])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('from_time', [$startDate, $endDate])
                     ->orWhereBetween('to_time', [$startDate, $endDate])
