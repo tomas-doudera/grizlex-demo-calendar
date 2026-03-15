@@ -18,7 +18,7 @@ class Staff extends Model
 
     protected $fillable = [
         'company_id', 'first_name', 'last_name', 'email', 'phone',
-        'role', 'specialization', 'bio', 'is_active', 'avatar_url',
+        'role', 'specialization', 'bio', 'is_active', 'avatar_url', 'color',
     ];
 
     protected function casts(): array

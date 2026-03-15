@@ -3,6 +3,7 @@
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
 @source '../../../../vendor/tomas-doudera/cal-me/resources/views/**/*';
+@source '../../../../resources/views/vendor/cal-me/**/*';
 
 /* ============================================================
    shadcn-inspired Filament Theme
@@ -411,5 +412,56 @@
 }
 
 :is(.dark) .cal-event-content p {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+/* ─── Event title (service name) ─── */
+.cal-event-content .cal-event-title {
+    @apply !text-[11px] !leading-tight !font-semibold !mt-0.5;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 90%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-title {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+/* ─── Event meta row (status icon + time, instructor) ─── */
+.cal-event-content .cal-event-meta {
+    @apply !overflow-hidden !whitespace-nowrap !text-[10px] !leading-tight;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 70%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-meta {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+.cal-event-content .cal-event-meta-icon {
+    @apply !size-3 !shrink-0;
+    color: inherit !important;
+}
+
+/* ─── Event badge (instructor) ─── */
+.cal-event-content .cal-event-badge {
+    @apply !inline-flex !items-center !gap-1 !text-[9px] !leading-tight !font-medium !rounded-full !px-1.5 !py-px !max-w-full !truncate;
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 25%, white) !important;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 85%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-badge {
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 35%, rgb(24 24 27)) !important;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 55%, white) !important;
+}
+
+.cal-event-content .cal-event-badge-dot {
+    @apply !size-1.5 !rounded-full !shrink-0;
+}
+
+/* ─── Event capacity (bottom) ─── */
+.cal-event-content .cal-event-capacity {
+    @apply !flex !items-center !gap-0.5 !text-[9px] !leading-tight !tabular-nums;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 65%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-capacity {
     color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
 }

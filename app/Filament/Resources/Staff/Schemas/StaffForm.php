@@ -39,6 +39,8 @@ class StaffForm
                             ->default('instructor')
                             ->inline(),
                         TextInput::make('specialization'),
+                        ColorPicker::make('color')
+                            ->required(),
                         Toggle::make('is_active')
                             ->default(true),
                         Textarea::make('bio')

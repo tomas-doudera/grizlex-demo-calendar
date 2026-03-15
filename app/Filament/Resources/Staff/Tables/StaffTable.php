@@ -6,6 +6,7 @@ use App\Enums\StaffRole;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -18,6 +19,8 @@ class StaffTable
     {
         return $table
             ->columns([
+                ColorColumn::make('color')
+                    ->label(''),
                 TextColumn::make('full_name')
                     ->label('Name')
                     ->state(fn ($record): string => "{$record->first_name} {$record->last_name}")
