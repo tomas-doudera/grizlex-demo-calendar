@@ -6,63 +6,181 @@
 
 /* ============================================================
    shadcn-inspired Filament Theme
-   Monochrome, clean, professional — with full dark mode support
+   Dark shell sidebar+topbar, rounded content card
    ============================================================ */
 
-/* --- Layout & Body --- */
-.fi-body {
-    @apply !bg-zinc-50 dark:!bg-zinc-950;
+/* ─── Body — dark shell background ─── */
+/*.fi-body {*/
+/*    @apply !bg-zinc-900 dark:!bg-zinc-950;*/
+/*}*/
+
+/* ─── Main content — rounded card ─── */
+.fi-main-ctn {
+    @apply lg:!rounded-tl-2xl lg:!overflow-hidden dark:shadow-gray-800 shadow dark:bg-linear-to-r from-60% from-gray-900/40 to-black
 }
 
-/* --- Topbar --- */
+/* ─── Main padding ─── */
+.fi-main {
+    @apply !px-4 md:!px-5 lg:!px-6;
+}
+
+/* ─── Topbar — part of the content card, seamless ─── */
 .fi-topbar {
-    @apply !shadow-none !ring-0 border-b border-zinc-200 dark:border-zinc-800;
+    @apply !min-h-14 !shadow-none !bg-transparent !border-none;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    box-shadow: none !important;
 }
 
-/* --- Sidebar --- */
+/* ─── Sidebar — always dark, no borders ─── */
 .fi-sidebar {
-    @apply dark:!bg-zinc-950;
+    @apply !border-none;
+    --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+.fi-sidebar.fi-sidebar-open {
+    @apply !shadow-none;
+    --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+.fi-sidebar-header {
+    @apply !h-14;
 }
 
 .fi-body-has-topbar .fi-sidebar-header {
-    @apply !shadow-none !ring-0 border-b border-zinc-200 dark:border-zinc-800 dark:!bg-zinc-950;
+    @apply !shadow-none !px-4 !border-none;
+    --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+.fi-body-has-topbar .fi-sidebar {
+    @apply lg:!top-0 lg:!h-dvh;
+}
+
+/* Sidebar brand text — white */
+.fi-sidebar-header .fi-logo {
+    @apply !text-white;
 }
 
 .fi-sidebar-nav {
-    @apply gap-y-5 py-6;
+    @apply !px-3 !py-4 !gap-y-6;
+}
+
+.fi-sidebar-nav-groups {
+    @apply !-mx-1 !gap-y-5;
+}
+
+.fi-sidebar-group {
+    @apply !gap-y-0.5;
+}
+
+.fi-sidebar-group-items {
+    @apply !gap-y-0.5;
 }
 
 .fi-sidebar-group-label {
-    @apply !text-xs !uppercase !tracking-wider !font-semibold !text-zinc-400 dark:!text-zinc-500;
+    @apply !text-[11px] !uppercase !tracking-widest !font-semibold !text-zinc-500 !ps-2 !mb-1;
+}
+
+.fi-sidebar-group-btn {
+    @apply !p-1.5 !gap-x-2;
+}
+
+.fi-sidebar-group-btn > .fi-icon {
+    @apply !text-zinc-500;
+}
+
+.fi-sidebar-group-collapse-btn {
+    @apply !text-zinc-500;
 }
 
 .fi-sidebar-item-btn {
-    @apply !rounded-md;
+    @apply !rounded-md !px-2 !py-1.5 !gap-x-2.5 transition-colors duration-100;
 }
 
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    @apply !bg-zinc-900 dark:!bg-zinc-100;
-}
-
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
-    @apply !text-white dark:!text-zinc-900;
-}
-
-.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
-    @apply !text-white dark:!text-zinc-900;
-}
-
-.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn {
-    @apply hover:!bg-zinc-100 focus-visible:!bg-zinc-100 dark:hover:!bg-zinc-800 dark:focus-visible:!bg-zinc-800;
+.fi-sidebar-item-btn > .fi-icon {
+    @apply !size-[18px] !text-zinc-500;
 }
 
 .fi-sidebar-item-label {
-    @apply !text-sm;
+    @apply !text-[13px] !font-medium !text-zinc-400;
 }
 
-/* --- Sections / Cards --- */
+/* Active sidebar item — subtle highlight */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply !bg-white/10;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    @apply !text-white;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    @apply !text-white !font-semibold;
+}
+
+/* Hover */
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn {
+    @apply hover:!bg-white/5 focus-visible:!bg-white/5;
+}
+
+.fi-sidebar-sub-group-items {
+    @apply !gap-y-0;
+}
+
+.fi-sidebar-footer {
+    @apply !mx-3 !my-2 !gap-y-2;
+}
+
+.fi-sidebar-close-overlay {
+    @apply !bg-zinc-950/60;
+}
+
+/* Sidebar badge */
+.fi-sidebar-item-badge-ctn .fi-badge {
+    @apply !bg-white/10 !text-zinc-300;
+}
+
+/* Sidebar database notifications */
+.fi-sidebar-database-notifications-btn > .fi-icon {
+    @apply !text-zinc-500;
+}
+
+.fi-sidebar-database-notifications-btn > .fi-sidebar-database-notifications-btn-label {
+    @apply !text-zinc-400;
+}
+
+/* ─── Topbar offset — sidebar goes full height ─── */
+.fi-body-has-topbar .fi-main-ctn {
+    @apply lg:!mt-0;
+}
+
+/* ─── Page layout — tighter gaps ─── */
+.fi-page-header-main-ctn {
+    @apply !gap-y-5 !py-5;
+}
+
+.fi-page-content {
+    @apply !gap-y-5;
+}
+
+.fi-header-heading {
+    @apply !text-xl !font-semibold !tracking-tight;
+}
+
+/* ─── Sections / Cards ─── */
 .fi-section:not(.fi-section-not-contained):not(.fi-aside) {
     @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+.fi-section:not(.fi-section-not-contained):not(.fi-divided) > .fi-section-content-ctn > .fi-section-content {
+    @apply !p-4;
+}
+
+.fi-section:not(.fi-section-not-contained).fi-divided > .fi-section-content-ctn > .fi-section-content > * {
+    @apply !p-4;
+}
+
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header {
+    @apply !px-4 !py-3;
 }
 
 .fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-section-has-header:not(.fi-collapsed) > .fi-section-content-ctn {
@@ -70,7 +188,7 @@
 }
 
 .fi-section > .fi-section-content-ctn > .fi-section-footer {
-    @apply !border-zinc-200 dark:!border-zinc-800;
+    @apply !border-zinc-200 dark:!border-zinc-800 !px-4 !py-3;
 }
 
 .fi-section .fi-section-header-heading {
@@ -81,7 +199,34 @@
     @apply !text-xs;
 }
 
-/* --- Buttons --- */
+/* ─── Form field gaps ─── */
+.fi-sc.fi-sc-has-gap {
+    @apply !gap-4;
+}
+
+.fi-sc.fi-sc-has-gap.fi-sc-dense {
+    @apply !gap-2;
+}
+
+/* ─── Fieldset ─── */
+.fi-fieldset:not(.fi-fieldset-not-contained) {
+    @apply !p-4 !rounded-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+/* ─── Tabs ─── */
+.fi-sc-tabs .fi-sc-tabs-tab.fi-active {
+    @apply !mt-4;
+}
+
+.fi-sc-tabs.fi-contained .fi-sc-tabs-tab.fi-active {
+    @apply !p-4;
+}
+
+.fi-tabs {
+    @apply !rounded-md;
+}
+
+/* ─── Buttons ─── */
 .fi-btn {
     @apply !rounded-md;
 }
@@ -90,7 +235,7 @@
     @apply !shadow-none;
 }
 
-/* --- Inputs --- */
+/* ─── Inputs ─── */
 .fi-input-wrp {
     @apply !rounded-md !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
 }
@@ -99,13 +244,47 @@
     @apply !ring-2 !ring-zinc-900 dark:!ring-zinc-300;
 }
 
-/* --- Tables --- */
+/* ─── Tables ─── */
 .fi-ta-ctn {
     @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
 }
 
 .fi-ta-header-cell {
-    @apply !text-xs !uppercase !tracking-wider !font-medium !text-zinc-500 dark:!text-zinc-400;
+    @apply !text-xs !uppercase !tracking-wider !font-medium !text-zinc-500 dark:!text-zinc-400 !py-2.5;
+}
+
+.fi-ta-cell:first-of-type {
+    @apply sm:!ps-4;
+}
+
+.fi-ta-cell:last-of-type {
+    @apply sm:!pe-4;
+}
+
+.fi-ta-cell:has(.fi-ta-actions),
+.fi-ta-cell:has(.fi-ta-record-checkbox),
+.fi-ta-cell.fi-ta-selection-cell {
+    @apply !py-2.5;
+}
+
+.fi-ta-cell:has(.fi-ta-actions):first-of-type,
+.fi-ta-cell:has(.fi-ta-record-checkbox):first-of-type,
+.fi-ta-cell.fi-ta-selection-cell:first-of-type {
+    @apply sm:!ps-4;
+}
+
+.fi-ta-cell:has(.fi-ta-actions):last-of-type,
+.fi-ta-cell:has(.fi-ta-record-checkbox):last-of-type,
+.fi-ta-cell.fi-ta-selection-cell:last-of-type {
+    @apply sm:!pe-4;
+}
+
+.fi-ta-header-cell:first-of-type {
+    @apply sm:!ps-4;
+}
+
+.fi-ta-header-cell:last-of-type {
+    @apply sm:!pe-4;
 }
 
 .fi-ta-row {
@@ -113,70 +292,96 @@
 }
 
 .fi-ta-row:hover {
-    @apply !bg-zinc-50 dark:!bg-zinc-900/50;
+    @apply !bg-zinc-50 dark:!bg-zinc-800/50;
 }
 
-/* --- Modal --- */
-.fi-modal-content {
-    @apply !rounded-lg !shadow-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
+.fi-ta-header-toolbar {
+    @apply sm:!px-4;
 }
 
-/* --- Simple / Login Page --- */
-.fi-simple-main {
-    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 sm:!rounded-lg dark:!ring-zinc-800;
+/* ─── Widgets ─── */
+.fi-wi {
+    @apply !gap-4;
 }
 
-/* --- Tabs --- */
-.fi-tabs {
-    @apply !rounded-md;
-}
-
-/* --- Badge refinements --- */
-.fi-badge {
-    @apply !rounded-md;
-}
-
-/* --- Dropdown --- */
-.fi-dropdown-panel {
-    @apply !rounded-md !shadow-md !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
-}
-
-/* --- Stats widget --- */
 .fi-wi-stats-overview-stat {
-    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800 !p-4;
 }
 
-/* --- Chart widgets --- */
 .fi-wi-chart {
     @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
 }
 
-/* --- Sidebar close overlay --- */
-.fi-sidebar-close-overlay {
-    @apply !bg-zinc-950/40 dark:!bg-zinc-950/60;
+/* ─── Modal ─── */
+.fi-modal-content {
+    @apply !rounded-lg !shadow-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
 }
 
-/* --- Pagination --- */
+.fi-modal-window .fi-modal-header {
+    @apply !px-5 !pt-5;
+}
+
+.fi-modal-window .fi-modal-content {
+    @apply !py-4;
+}
+
+.fi-modal-window .fi-modal-content:not(:has(.fi-modal-icon)):not(:has(.fi-modal-header.fi-sticky)) {
+    @apply !px-5;
+}
+
+.fi-modal-window .fi-modal-footer {
+    @apply !pb-5;
+}
+
+/* ─── Login / Simple page ─── */
+.fi-simple-main {
+    @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 sm:!rounded-lg dark:!ring-zinc-800 !my-8 !py-8 sm:!px-8;
+}
+
+/* ─── Badge ─── */
+.fi-badge {
+    @apply !rounded-md;
+}
+
+/* ─── Dropdown ─── */
+.fi-dropdown-panel {
+    @apply !rounded-md !shadow-md !ring-1 !ring-zinc-200 dark:!ring-zinc-700;
+}
+
+/* ─── Pagination ─── */
 .fi-pagination-items .fi-btn {
     @apply !rounded-md;
 }
 
-/* --- Header breadcrumbs --- */
-.fi-header-heading {
-    @apply !text-xl !font-semibold !tracking-tight;
-}
-
-/* --- Notification refinements --- */
+/* ─── Notification ─── */
 .fi-no-notification {
     @apply !rounded-lg !shadow-md !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
 }
 
-/* --- Fieldset --- */
-.fi-fieldset {
-    @apply !rounded-lg !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
-}
-
-/* --- Aside section content --- */
+/* ─── Aside section ─── */
 .fi-section.fi-aside > .fi-section-content-ctn {
     @apply !rounded-lg !shadow-none !ring-1 !ring-zinc-200 dark:!ring-zinc-800;
+}
+
+.fi-section.fi-aside {
+    @apply !gap-x-4;
+}
+
+/* ─── Repeater ─── */
+.fi-fo-repeater-items {
+    @apply !gap-3;
+}
+
+/* ─── Empty states ─── */
+.fi-ta-empty-state {
+    @apply !py-8;
+}
+
+.fi-empty-state {
+    @apply !py-8;
+}
+
+/* ─── Infolist ─── */
+.fi-in-entry-wrp {
+    @apply !gap-y-1;
 }
