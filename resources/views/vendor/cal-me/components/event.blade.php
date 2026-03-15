@@ -78,14 +78,32 @@
             : null;
     }
 
-    // Service name
+    // Service name + color
     $serviceName = (isset($event->service) && $event->service) ? $event->service->name : null;
+    $serviceColor = (isset($event->service) && $event->service) ? ($event->service->color ?? null) : null;
 
     // Instructor / staff name + color
     $staffName = (isset($event->staff) && $event->staff)
         ? trim(($event->staff->first_name ?? '') . ' ' . ($event->staff->last_name ?? ''))
         : ($event->guest_name ?? null);
     $staffColor = (isset($event->staff) && $event->staff) ? ($event->staff->color ?? null) : null;
+
+    // Avatar mode
+    $showAvatarMode = property_exists($this, 'showStaffAvatarsInEvents') && $this->showStaffAvatarsInEvents;
+    $staffAvatarUrl = null;
+    $staffInitials = null;
+    if ($showAvatarMode && isset($event->staff) && $event->staff) {
+        $staffAvatarUrl = method_exists($this, 'resolveStaffAvatarUrl')
+            ? $this->resolveStaffAvatarUrl($event->staff->avatar_url)
+            : $event->staff->avatar_url;
+        $staffInitials = mb_strtoupper(mb_substr($event->staff->first_name ?? '', 0, 1) . mb_substr($event->staff->last_name ?? '', 0, 1));
+    }
+
+    // In avatar mode, use staff color as event color; fall back to service color
+    if ($showAvatarMode) {
+        $avatarModeColor = $staffColor ?? $event->color;
+        $colorInfo = $this->processEventColor($avatarModeColor);
+    }
 @endphp
 
 <div
@@ -100,7 +118,7 @@
         $event->className ?? ''
     ])
     x-bind:class="{ 'cal-event--resizing': resizing }"
-    style="height: {{ $vertical ? $cellHeight : 'auto' }}px; {{ isset($event->style) ? $event->style . ';' : '' }}"
+    style="height: {{ $vertical ? $cellHeight : 'auto' }}px; {{ $showAvatarMode ? '--cal-event-color: ' . ($avatarModeColor ?? '#3b82f6') . ';' : (isset($event->style) ? $event->style . ';' : '') }}"
     x-data="calMeEvent({
         vertical: @js($vertical),
         singleDay: @js($singleDay),
@@ -162,42 +180,90 @@
         class="cal-event-content flex flex-col"
         style="background-color: {{ $colorInfo['bgColor'] ?? '#eee' }}"
     >
-        {{-- Row 1: Time + status icon (right) --}}
-        <div class="cal-event-meta flex items-center gap-1">
-            <small class="flex-1" x-text="label"></small>
-            @if($statusIcon)
-                <x-filament::icon :icon="$statusIcon" class="cal-event-meta-icon" />
+        @if($showAvatarMode)
+            {{-- Avatar mode layout --}}
+            <div class="flex gap-1">
+                <div class="flex-1 min-w-0">
+                    <div class="cal-event-meta flex items-center gap-1">
+                        <small class="flex-1" x-text="label"></small>
+                    </div>
+                    @if($serviceName)
+                        <span
+                            class="inline-flex items-center gap-1 rounded-full truncate max-w-full"
+                            style="font-size: 9px; line-height: 1; font-weight: 600; padding: 2px 5px; background-color: {{ $serviceColor ?? '#6b7280' }}22; color: {{ $serviceColor ?? '#6b7280' }};"
+                        ><span class="rounded-full flex-shrink-0" style="width: 5px; height: 5px; background-color: {{ $serviceColor ?? '#6b7280' }};"></span>{{ $serviceName }}</span>
+                    @endif
+                </div>
+                @if($staffAvatarUrl || $staffInitials)
+                    <div class="flex-shrink-0" style="padding-top: 1px;">
+                        @if($staffAvatarUrl)
+                            <img
+                                src="{{ $staffAvatarUrl }}"
+                                alt="{{ $staffName }}"
+                                class="rounded-full object-cover"
+                                style="width: 20px; height: 20px; box-shadow: 0 0 0 2px {{ $staffColor ?? '#a1a1aa' }};"
+                            />
+                        @else
+                            <span
+                                class="rounded-full flex items-center justify-center text-white font-bold"
+                                style="width: 20px; height: 20px; font-size: 8px; background-color: {{ $staffColor ?? '#a1a1aa' }};"
+                            >{{ $staffInitials }}</span>
+                        @endif
+                    </div>
+                @endif
+            </div>
+
+            {{-- Bottom row: capacity left, status icon right --}}
+            @if($hasCapacity || $statusIcon)
+                <div class="flex items-center mt-auto">
+                    @if($hasCapacity)
+                        <div class="cal-event-capacity">
+                            <x-filament::icon icon="heroicon-o-users" class="cal-event-meta-icon" />
+                            <span>{{ $bookedCount }}/{{ $event->capacity }}</span>
+                        </div>
+                    @endif
+                    @if($statusIcon)
+                        <div class="ml-auto">
+                            <x-filament::icon :icon="$statusIcon" class="cal-event-meta-icon" />
+                        </div>
+                    @endif
+                </div>
             @endif
-        </div>
-
-        {{-- Row 2: Service name --}}
-        @if($serviceName)
-            <p class="cal-event-title truncate">{{ $serviceName }}</p>
-        @endif
-
-        {{-- Row 3: Instructor badge --}}
-        @if($staffName)
-            <div class="mt-0.5">
-                <span
-                    class="cal-event-badge truncate"
-                    @if($staffColor)
-                        style="--staff-color: {{ $staffColor }}"
-                    @endif
-                >
-                    @if($staffColor)
-                        <span class="cal-event-badge-dot" style="background-color: {{ $staffColor }}"></span>
-                    @endif
-                    {{ $staffName }}
-                </span>
+        @else
+            {{-- Default mode: text-based staff badge --}}
+            <div class="cal-event-meta flex items-center gap-1">
+                <small class="flex-1" x-text="label"></small>
+                @if($statusIcon)
+                    <x-filament::icon :icon="$statusIcon" class="cal-event-meta-icon" />
+                @endif
             </div>
-        @endif
 
-        {{-- Bottom: Capacity icon + count --}}
-        @if($hasCapacity)
-            <div class="cal-event-capacity mt-auto">
-                <x-filament::icon icon="heroicon-o-users" class="cal-event-meta-icon" />
-                <span>{{ $bookedCount }}/{{ $event->capacity }}</span>
-            </div>
+            @if($serviceName)
+                <p class="cal-event-title truncate">{{ $serviceName }}</p>
+            @endif
+
+            @if($staffName)
+                <div class="mt-0.5">
+                    <span
+                        class="cal-event-badge truncate"
+                        @if($staffColor)
+                            style="--staff-color: {{ $staffColor }}"
+                        @endif
+                    >
+                        @if($staffColor)
+                            <span class="cal-event-badge-dot" style="background-color: {{ $staffColor }}"></span>
+                        @endif
+                        {{ $staffName }}
+                    </span>
+                </div>
+            @endif
+
+            @if($hasCapacity)
+                <div class="cal-event-capacity mt-auto">
+                    <x-filament::icon icon="heroicon-o-users" class="cal-event-meta-icon" />
+                    <span>{{ $bookedCount }}/{{ $event->capacity }}</span>
+                </div>
+            @endif
         @endif
     </div>
 
