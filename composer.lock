@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a66e158348a5a2ae2bc8e7fa90f2e385",
+    "content-hash": "4f57d1e032af5ff069393815abdc4e3a",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -8184,6 +8184,96 @@
             "time": "2025-12-02T11:56:42+00:00"
         },
         {
+            "name": "tomas-doudera/cal-me",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../cal-me",
+                "reference": "0ac949e298b10ef43152681d8b0f8d4ad4a4fe29"
+            },
+            "require": {
+                "filament/filament": "^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.0",
+                "orchestra/testbench": "^9.0|^10.0",
+                "pestphp/pest": "^3.0",
+                "pestphp/pest-plugin-arch": "^3.0",
+                "pestphp/pest-plugin-laravel": "^3.0",
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "TomasDoudera\\CalMe\\CalMeServiceProvider"
+                    ],
+                    "aliases": {
+                        "CalMe": "TomasDoudera\\CalMe\\Facades\\CalMe"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "TomasDoudera\\CalMe\\": "src/",
+                    "TomasDoudera\\CalMe\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "TomasDoudera\\CalMe\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "post-autoload-dump": [
+                    "@php ./vendor/bin/testbench package:discover --ansi"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tomáš Douděra",
+                    "email": "tomasdoudera@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Calendar plugin for filamentPhp.",
+            "homepage": "https://github.com/tomas-doudera/cal-me",
+            "keywords": [
+                "cal-me",
+                "laravel",
+                "tomas-doudera"
+            ],
+            "support": {
+                "issues": "https://github.com/tomas-doudera/cal-me/issues",
+                "source": "https://github.com/tomas-doudera/cal-me"
+            },
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "ueberdosis/tiptap-php",
             "version": "2.1.0",
             "source": {
@@ -13463,7 +13553,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "tomas-doudera/cal-me": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
