@@ -8,11 +8,14 @@ use Filament\Widgets\ChartWidget;
 
 class OrdersByStatusChart extends ChartWidget
 {
-    protected ?string $heading = 'Orders by Status';
-
     protected static ?int $sort = -1;
 
     protected ?string $maxHeight = '300px';
+
+    public function getHeading(): ?string
+    {
+        return __('filament/widgets.charts.orders_by_status');
+    }
 
     protected function getData(): array
     {

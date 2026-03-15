@@ -20,64 +20,80 @@ class CustomerInfolist
                         Grid::make(1)
                             ->columnSpan(3)
                             ->schema([
-                                Section::make('Personal Information')
+                                Section::make(__('filament/customers.sections.personal_information'))
                                     ->columns(3)
                                     ->schema([
-                                        TextEntry::make('first_name'),
-                                        TextEntry::make('last_name'),
+                                        TextEntry::make('first_name')
+                                            ->label(__('filament/customers.fields.first_name')),
+                                        TextEntry::make('last_name')
+                                            ->label(__('filament/customers.fields.last_name')),
                                         TextEntry::make('email')
+                                            ->label(__('filament/customers.fields.email'))
                                             ->copyable()
                                             ->icon('heroicon-o-envelope'),
                                         TextEntry::make('phone')
+                                            ->label(__('filament/customers.fields.phone'))
                                             ->icon('heroicon-o-phone')
-                                            ->placeholder('Not set'),
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('date_of_birth')
+                                            ->label(__('filament/customers.fields.date_of_birth'))
                                             ->date()
-                                            ->placeholder('Not set'),
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('company_name')
-                                            ->placeholder('Not set'),
+                                            ->label(__('filament/customers.fields.company_name'))
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('job_title')
-                                            ->placeholder('Not set'),
+                                            ->label(__('filament/customers.fields.job_title'))
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                     ]),
-                                Section::make('Address')
+                                Section::make(__('filament/customers.sections.address'))
                                     ->columns(4)
                                     ->schema([
                                         TextEntry::make('address')
-                                            ->placeholder('Not set')
+                                            ->label(__('filament/customers.fields.address'))
+                                            ->placeholder(__('filament/customers.columns.not_set'))
                                             ->columnSpanFull(),
                                         TextEntry::make('city')
-                                            ->placeholder('Not set'),
+                                            ->label(__('filament/customers.fields.city'))
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('state')
-                                            ->placeholder('Not set'),
+                                            ->label(__('filament/customers.fields.state'))
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('postal_code')
-                                            ->placeholder('Not set'),
+                                            ->label(__('filament/customers.fields.postal_code'))
+                                            ->placeholder(__('filament/customers.columns.not_set')),
                                         TextEntry::make('country')
-                                            ->placeholder('Not set')
+                                            ->label(__('filament/customers.fields.country'))
+                                            ->placeholder(__('filament/customers.columns.not_set'))
                                             ->badge(),
                                     ]),
                             ]),
                         Grid::make(1)
                             ->columnSpan(1)
                             ->schema([
-                                Section::make('Account')
+                                Section::make(__('filament/customers.sections.account'))
                                     ->schema([
                                         IconEntry::make('is_active')
                                             ->boolean()
-                                            ->label('Active'),
+                                            ->label(__('filament/customers.columns.active')),
                                         IconEntry::make('is_vip')
                                             ->boolean()
-                                            ->label('VIP'),
+                                            ->label(__('filament/customers.columns.vip')),
                                         TextEntry::make('lifetime_value')
+                                            ->label(__('filament/customers.fields.lifetime_value'))
                                             ->money('USD')
                                             ->color('success'),
                                         TextEntry::make('orders_count')
+                                            ->label(__('filament/customers.infolist.orders_count'))
                                             ->state(fn ($record): int => $record->orders()->count())
                                             ->badge()
                                             ->color('info'),
                                         TextEntry::make('created_at')
+                                            ->label(__('filament/customers.fields.created_at'))
                                             ->dateTime(),
                                         TextEntry::make('notes')
-                                            ->placeholder('No notes'),
+                                            ->label(__('filament/customers.fields.notes'))
+                                            ->placeholder(__('filament/customers.columns.no_notes')),
                                     ]),
                             ]),
                     ]),

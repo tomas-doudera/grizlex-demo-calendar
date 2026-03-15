@@ -20,19 +20,22 @@ class OrdersTable
         return $table
             ->columns([
                 TextColumn::make('order_number')
+                    ->label(__('filament/orders.fields.order_number'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium')
                     ->copyable(),
                 TextColumn::make('customer.first_name')
-                    ->label('Customer')
+                    ->label(__('filament/orders.columns.customer'))
                     ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : 'N/A')
                     ->searchable(['customer.first_name', 'customer.last_name'])
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('filament/orders.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('total')
+                    ->label(__('filament/orders.fields.total'))
                     ->money('USD')
                     ->sortable()
                     ->summarize([
@@ -41,17 +44,19 @@ class OrdersTable
                     ]),
                 TextColumn::make('items_count')
                     ->counts('items')
-                    ->label('Items')
+                    ->label(__('filament/orders.columns.items'))
                     ->badge()
                     ->color('gray'),
                 IconColumn::make('is_paid')
                     ->boolean()
-                    ->label('Paid'),
+                    ->label(__('filament/orders.columns.paid')),
                 TextColumn::make('payment_method')
+                    ->label(__('filament/orders.fields.payment_method'))
                     ->badge()
                     ->color('gray')
                     ->toggleable(),
                 TextColumn::make('created_at')
+                    ->label(__('filament/orders.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->since()
@@ -60,16 +65,18 @@ class OrdersTable
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('filament/orders.filters.status'))
                     ->options(OrderStatus::class)
                     ->multiple(),
                 TernaryFilter::make('is_paid')
-                    ->label('Payment Status'),
+                    ->label(__('filament/orders.columns.payment_status')),
                 SelectFilter::make('payment_method')
+                    ->label(__('filament/orders.filters.payment_method'))
                     ->options([
-                        'credit_card' => 'Credit Card',
-                        'paypal' => 'PayPal',
-                        'bank_transfer' => 'Bank Transfer',
-                        'stripe' => 'Stripe',
+                        'credit_card' => __('filament/orders.payment_methods.credit_card'),
+                        'paypal' => __('filament/orders.payment_methods.paypal'),
+                        'bank_transfer' => __('filament/orders.payment_methods.bank_transfer'),
+                        'stripe' => __('filament/orders.payment_methods.stripe'),
                     ]),
             ])
             ->recordActions([

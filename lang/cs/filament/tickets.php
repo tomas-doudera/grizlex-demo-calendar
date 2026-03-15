@@ -1,0 +1,50 @@
+<?php
+
+return [
+    'label' => 'Tiket',
+    'plural_label' => 'Tikety',
+    'sections' => [
+        'ticket_info' => 'Informace o tiketu',
+        'description' => 'Popis',
+        'status_priority' => 'Stav a priorita',
+        'timestamps' => 'Časová razítka',
+    ],
+    'fields' => [
+        'ticket_number' => 'Číslo tiketu',
+        'subject' => 'Předmět',
+        'customer' => 'Zákazník',
+        'project' => 'Projekt',
+        'assigned_to' => 'Přiřazeno komu',
+        'category' => 'Kategorie',
+        'description' => 'Popis',
+        'status' => 'Stav',
+        'priority' => 'Priorita',
+        'resolved_at' => 'Vyřešeno dne',
+        'first_response_at' => 'První odpověď dne',
+        'created_at' => 'Vytvořeno',
+    ],
+    'columns' => [
+        'customer' => 'Zákazník',
+        'no_customer' => 'Bez zákazníka',
+        'assigned' => 'Přiřazeno',
+        'unassigned' => 'Nepřiřazeno',
+        'ticket_number' => 'Číslo tiketu',
+        'subject' => 'Předmět',
+        'status' => 'Stav',
+        'priority' => 'Priorita',
+        'category' => 'Kategorie',
+        'created_at' => 'Vytvořeno',
+    ],
+    'filters' => [
+        'status' => 'Stav',
+        'priority' => 'Priorita',
+        'category' => 'Kategorie',
+    ],
+    'categories' => [
+        'general' => 'Obecné',
+        'billing' => 'Fakturace',
+        'technical' => 'Technické',
+        'feature_request' => 'Požadavek na funkci',
+        'bug_report' => 'Hlášení chyby',
+    ],
+];

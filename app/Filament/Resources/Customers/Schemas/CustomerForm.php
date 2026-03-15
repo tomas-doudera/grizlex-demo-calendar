@@ -21,50 +21,62 @@ class CustomerForm
                 Grid::make(1)
                     ->columnSpan(2)
                     ->schema([
-                        Section::make('Personal Information')
+                        Section::make(__('filament/customers.sections.personal_information'))
                             ->columns(2)
                             ->schema([
                                 TextInput::make('first_name')
+                                    ->label(__('filament/customers.fields.first_name'))
                                     ->required()
                                     ->maxLength(255),
                                 TextInput::make('last_name')
+                                    ->label(__('filament/customers.fields.last_name'))
                                     ->required()
                                     ->maxLength(255),
                                 TextInput::make('email')
+                                    ->label(__('filament/customers.fields.email'))
                                     ->email()
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->maxLength(255),
                                 TextInput::make('phone')
+                                    ->label(__('filament/customers.fields.phone'))
                                     ->tel()
                                     ->maxLength(255),
                                 DatePicker::make('date_of_birth')
+                                    ->label(__('filament/customers.fields.date_of_birth'))
                                     ->maxDate(now()->subYears(18)),
                             ]),
-                        Section::make('Company Details')
+                        Section::make(__('filament/customers.sections.company_details'))
                             ->columns(2)
                             ->schema([
-                                TextInput::make('company_name'),
-                                TextInput::make('job_title'),
+                                TextInput::make('company_name')
+                                    ->label(__('filament/customers.fields.company_name')),
+                                TextInput::make('job_title')
+                                    ->label(__('filament/customers.fields.job_title')),
                             ]),
-                        Section::make('Address')
+                        Section::make(__('filament/customers.sections.address'))
                             ->columns(2)
                             ->schema([
                                 Textarea::make('address')
+                                    ->label(__('filament/customers.fields.address'))
                                     ->rows(2)
                                     ->columnSpanFull(),
-                                TextInput::make('city'),
-                                TextInput::make('state'),
-                                TextInput::make('postal_code'),
+                                TextInput::make('city')
+                                    ->label(__('filament/customers.fields.city')),
+                                TextInput::make('state')
+                                    ->label(__('filament/customers.fields.state')),
+                                TextInput::make('postal_code')
+                                    ->label(__('filament/customers.fields.postal_code')),
                                 Select::make('country')
+                                    ->label(__('filament/customers.fields.country'))
                                     ->options([
-                                        'US' => 'United States',
-                                        'UK' => 'United Kingdom',
-                                        'DE' => 'Germany',
-                                        'FR' => 'France',
-                                        'CZ' => 'Czech Republic',
-                                        'CA' => 'Canada',
-                                        'AU' => 'Australia',
+                                        'US' => __('filament/customers.countries.us'),
+                                        'UK' => __('filament/customers.countries.uk'),
+                                        'DE' => __('filament/customers.countries.de'),
+                                        'FR' => __('filament/customers.countries.fr'),
+                                        'CZ' => __('filament/customers.countries.cz'),
+                                        'CA' => __('filament/customers.countries.ca'),
+                                        'AU' => __('filament/customers.countries.au'),
                                     ])
                                     ->searchable(),
                             ]),
@@ -72,21 +84,23 @@ class CustomerForm
                 Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
-                        Section::make('Status')
+                        Section::make(__('filament/customers.sections.status'))
                             ->schema([
                                 Toggle::make('is_active')
-                                    ->label('Active')
+                                    ->label(__('filament/customers.fields.active'))
                                     ->default(true),
                                 Toggle::make('is_vip')
-                                    ->label('VIP Customer'),
+                                    ->label(__('filament/customers.fields.vip_customer')),
                                 TextInput::make('lifetime_value')
+                                    ->label(__('filament/customers.fields.lifetime_value'))
                                     ->numeric()
                                     ->prefix('$')
                                     ->disabled(),
                             ]),
-                        Section::make('Notes')
+                        Section::make(__('filament/customers.sections.notes'))
                             ->schema([
                                 Textarea::make('notes')
+                                    ->label(__('filament/customers.fields.notes'))
                                     ->rows(4),
                             ]),
                     ]),

@@ -21,31 +21,36 @@ class TicketsTable
         return $table
             ->columns([
                 TextColumn::make('ticket_number')
+                    ->label(__('filament/tickets.fields.ticket_number'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium')
                     ->copyable(),
                 TextColumn::make('subject')
+                    ->label(__('filament/tickets.fields.subject'))
                     ->searchable()
                     ->limit(50)
                     ->wrap(),
                 TextColumn::make('customer.first_name')
-                    ->label('Customer')
-                    ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : 'N/A')
+                    ->label(__('filament/tickets.columns.customer'))
+                    ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : __('filament/tickets.columns.no_customer'))
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('filament/tickets.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('priority')
+                    ->label(__('filament/tickets.fields.priority'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('category')
+                    ->label(__('filament/tickets.fields.category'))
                     ->badge()
                     ->color('gray')
                     ->toggleable(),
                 TextColumn::make('assignedUser.name')
-                    ->label('Assigned To')
-                    ->placeholder('Unassigned')
+                    ->label(__('filament/tickets.columns.assigned'))
+                    ->placeholder(__('filament/tickets.columns.unassigned'))
                     ->toggleable(),
                 IconColumn::make('is_resolved')
                     ->boolean()
@@ -57,6 +62,7 @@ class TicketsTable
                     ->color('gray')
                     ->toggleable(),
                 TextColumn::make('created_at')
+                    ->label(__('filament/tickets.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->since()
@@ -73,18 +79,21 @@ class TicketsTable
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('filament/tickets.filters.status'))
                     ->options(TicketStatus::class)
                     ->multiple(),
                 SelectFilter::make('priority')
+                    ->label(__('filament/tickets.filters.priority'))
                     ->options(TicketPriority::class)
                     ->multiple(),
                 SelectFilter::make('category')
+                    ->label(__('filament/tickets.filters.category'))
                     ->options([
-                        'Bug' => 'Bug',
-                        'Feature Request' => 'Feature Request',
-                        'Support' => 'Support',
-                        'Question' => 'Question',
-                        'Billing' => 'Billing',
+                        'Bug' => __('filament/tickets.categories.bug'),
+                        'Feature Request' => __('filament/tickets.categories.feature_request'),
+                        'Support' => __('filament/tickets.categories.support'),
+                        'Question' => __('filament/tickets.categories.question'),
+                        'Billing' => __('filament/tickets.categories.billing'),
                     ]),
                 TernaryFilter::make('is_resolved')
                     ->label('Resolved'),

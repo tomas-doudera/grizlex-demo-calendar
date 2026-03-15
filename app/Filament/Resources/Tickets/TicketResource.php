@@ -20,11 +20,24 @@ class TicketResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Support';
-
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'subject';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/tickets.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/tickets.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.support');
+    }
 
     public static function form(Schema $schema): Schema
     {

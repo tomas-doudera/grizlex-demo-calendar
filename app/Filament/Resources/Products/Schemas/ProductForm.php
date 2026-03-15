@@ -26,23 +26,26 @@ class ProductForm
             ->components([
                 Tabs::make('Product')
                     ->tabs([
-                        Tabs\Tab::make('General')
+                        Tabs\Tab::make(__('filament/products.tabs.general'))
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Section::make('Product Information')
-                                    ->description('Basic product details.')
+                                Section::make(__('filament/products.sections.product_information'))
+                                    ->description(__('filament/products.sections.product_information_description'))
                                     ->columns(2)
                                     ->schema([
                                         TextInput::make('name')
+                                            ->label(__('filament/products.fields.name'))
                                             ->required()
                                             ->maxLength(255)
                                             ->live(onBlur: true)
                                             ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
                                         TextInput::make('slug')
+                                            ->label(__('filament/products.fields.slug'))
                                             ->required()
                                             ->maxLength(255)
                                             ->unique(ignoreRecord: true),
                                         Select::make('category_id')
+                                            ->label(__('filament/products.fields.category'))
                                             ->relationship('category', 'name')
                                             ->searchable()
                                             ->preload()
@@ -51,51 +54,54 @@ class ProductForm
                                                 TextInput::make('slug')->required(),
                                             ]),
                                         Select::make('status')
+                                            ->label(__('filament/products.fields.status'))
                                             ->options(ProductStatus::class)
                                             ->required()
                                             ->default('draft')
                                             ->live(),
                                         DatePicker::make('published_at')
-                                            ->label('Publish Date')
+                                            ->label(__('filament/products.fields.publish_date'))
                                             ->visible(fn (Get $get): bool => $get('status') === 'active'),
                                         ColorPicker::make('color')
-                                            ->label('Product Color'),
+                                            ->label(__('filament/products.fields.product_color')),
                                     ]),
-                                Section::make('Description')
+                                Section::make(__('filament/products.sections.description'))
                                     ->schema([
                                         Textarea::make('description')
+                                            ->label(__('filament/products.fields.description'))
                                             ->rows(3)
                                             ->columnSpanFull(),
                                         RichEditor::make('content')
-                                            ->label('Full Description')
+                                            ->label(__('filament/products.fields.full_description'))
                                             ->columnSpanFull(),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Pricing')
+                        Tabs\Tab::make(__('filament/products.tabs.pricing'))
                             ->icon('heroicon-o-currency-dollar')
                             ->schema([
-                                Section::make('Pricing')
-                                    ->description('Set product pricing.')
+                                Section::make(__('filament/products.sections.pricing'))
+                                    ->description(__('filament/products.sections.pricing_description'))
                                     ->columns(3)
                                     ->schema([
                                         TextInput::make('price')
+                                            ->label(__('filament/products.fields.price'))
                                             ->required()
                                             ->numeric()
                                             ->prefix('$')
                                             ->default(0),
                                         TextInput::make('compare_at_price')
-                                            ->label('Compare at Price')
+                                            ->label(__('filament/products.fields.compare_at_price'))
                                             ->numeric()
                                             ->prefix('$')
-                                            ->helperText('Original price before discount'),
+                                            ->helperText(__('filament/products.fields.compare_at_price_helper')),
                                         TextInput::make('cost')
-                                            ->label('Cost per item')
+                                            ->label(__('filament/products.fields.cost_per_item'))
                                             ->numeric()
                                             ->prefix('$')
                                             ->helperText('Customers won\'t see this'),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Inventory')
+                        Tabs\Tab::make(__('filament/products.tabs.inventory'))
                             ->icon('heroicon-o-cube')
                             ->schema([
                                 Section::make('Inventory & Shipping')
@@ -115,19 +121,22 @@ class ProductForm
                                             ->default(0)
                                             ->minValue(0),
                                         TextInput::make('weight')
+                                            ->label(__('filament/products.fields.weight'))
                                             ->numeric()
                                             ->suffix('kg'),
                                         Toggle::make('requires_shipping')
+                                            ->label(__('filament/products.fields.requires_shipping'))
                                             ->default(true)
                                             ->columnSpanFull(),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Attributes')
+                        Tabs\Tab::make(__('filament/products.tabs.attributes'))
                             ->icon('heroicon-o-tag')
                             ->schema([
                                 Section::make('Organization')
                                     ->schema([
                                         TagsInput::make('tags')
+                                            ->label(__('filament/products.fields.tags'))
                                             ->suggestions(['new', 'sale', 'bestseller', 'limited', 'eco-friendly', 'premium'])
                                             ->columnSpanFull(),
                                         KeyValue::make('metadata')

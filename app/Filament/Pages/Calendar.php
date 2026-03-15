@@ -10,13 +10,19 @@ class Calendar extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
-    protected static ?string $navigationLabel = 'Base Calendar';
-
-    protected static string|\UnitEnum|null $navigationGroup = 'Calendars';
-
     protected static ?int $navigationSort = 0;
 
     protected string $view = 'filament.pages.calendar';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/navigation.pages.base_calendar');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.calendars');
+    }
 
     protected function getFooterWidgets(): array
     {

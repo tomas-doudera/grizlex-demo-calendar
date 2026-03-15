@@ -16,32 +16,36 @@ class CompaniesTable
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Company')
+                    ->label(__('filament/companies.columns.company'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium'),
                 TextColumn::make('email')
+                    ->label(__('filament/companies.fields.email'))
                     ->searchable()
                     ->icon('heroicon-o-envelope')
                     ->toggleable(),
                 TextColumn::make('phone')
+                    ->label(__('filament/companies.fields.phone'))
                     ->toggleable(),
                 TextColumn::make('city')
+                    ->label(__('filament/companies.fields.city'))
                     ->toggleable(),
                 TextColumn::make('places_count')
                     ->counts('places')
-                    ->label('Venues')
+                    ->label(__('filament/companies.columns.venues'))
                     ->badge()
                     ->color('info'),
                 TextColumn::make('services_count')
                     ->counts('services')
-                    ->label('Services')
+                    ->label(__('filament/companies.columns.services'))
                     ->badge()
                     ->color('gray'),
                 IconColumn::make('is_active')
                     ->boolean()
-                    ->label('Active'),
+                    ->label(__('filament/companies.columns.active')),
                 TextColumn::make('created_at')
+                    ->label(__('filament/companies.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

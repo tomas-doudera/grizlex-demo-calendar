@@ -1,0 +1,50 @@
+<?php
+
+return [
+    'label' => 'Ticket',
+    'plural_label' => 'Tickets',
+    'sections' => [
+        'ticket_info' => 'Ticket Info',
+        'description' => 'Description',
+        'status_priority' => 'Status & Priority',
+        'timestamps' => 'Timestamps',
+    ],
+    'fields' => [
+        'ticket_number' => 'Ticket Number',
+        'subject' => 'Subject',
+        'customer' => 'Customer',
+        'project' => 'Project',
+        'assigned_to' => 'Assigned To',
+        'category' => 'Category',
+        'description' => 'Description',
+        'status' => 'Status',
+        'priority' => 'Priority',
+        'resolved_at' => 'Resolved At',
+        'first_response_at' => 'First Response At',
+        'created_at' => 'Created At',
+    ],
+    'columns' => [
+        'customer' => 'Customer',
+        'no_customer' => 'No customer',
+        'assigned' => 'Assigned',
+        'unassigned' => 'Unassigned',
+        'ticket_number' => 'Ticket Number',
+        'subject' => 'Subject',
+        'status' => 'Status',
+        'priority' => 'Priority',
+        'category' => 'Category',
+        'created_at' => 'Created At',
+    ],
+    'filters' => [
+        'status' => 'Status',
+        'priority' => 'Priority',
+        'category' => 'Category',
+    ],
+    'categories' => [
+        'general' => 'General',
+        'billing' => 'Billing',
+        'technical' => 'Technical',
+        'feature_request' => 'Feature Request',
+        'bug_report' => 'Bug Report',
+    ],
+];

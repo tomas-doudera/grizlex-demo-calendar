@@ -15,7 +15,10 @@ class LatestOrdersWidget extends TableWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Latest Orders';
+    public static function getHeading(): ?string
+    {
+        return __('filament/widgets.tables.latest_orders');
+    }
 
     public function table(Table $table): Table
     {
@@ -23,19 +26,23 @@ class LatestOrdersWidget extends TableWidget
             ->query(fn (): Builder => Order::query()->with('customer')->latest()->limit(5))
             ->columns([
                 TextColumn::make('order_number')
+                    ->label(__('filament/widgets.tables.order_number'))
                     ->weight('medium')
                     ->searchable(),
                 TextColumn::make('customer.first_name')
-                    ->label('Customer')
+                    ->label(__('filament/widgets.tables.customer'))
                     ->state(fn (Order $record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : 'N/A'),
                 TextColumn::make('status')
+                    ->label(__('filament/widgets.tables.status'))
                     ->badge(),
                 TextColumn::make('total')
+                    ->label(__('filament/widgets.tables.total'))
                     ->money('USD'),
                 IconColumn::make('is_paid')
                     ->boolean()
-                    ->label('Paid'),
+                    ->label(__('filament/widgets.tables.paid')),
                 TextColumn::make('created_at')
+                    ->label(__('filament/widgets.tables.created_at'))
                     ->since(),
             ])
             ->paginated(false);

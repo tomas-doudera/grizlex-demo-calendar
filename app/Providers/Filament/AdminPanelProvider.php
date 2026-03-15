@@ -2,10 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\ApplyLocale;
+use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -39,14 +42,25 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->brandName('Grizlex')
             ->navigationGroups([
-                'Calendars',
-                'Reservations',
-                'CRM',
-                'Finance',
-                'Shop',
-                'Support',
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.calendars')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.reservations')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.crm')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.finance')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.shop')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.support')),
             ])
-            ->plugin(CalMePlugin::make())
+            ->plugins([
+                CalMePlugin::make(),
+                FilamentLanguageSwitcherPlugin::make()
+                    ->locales([
+                        ['code' => 'en', 'name' => 'English', 'flag' => 'us'],
+                        ['code' => 'cs', 'name' => 'Čeština', 'flag' => 'cz'],
+                        ['code' => 'sk', 'name' => 'Slovenčina', 'flag' => 'sk'],
+                        ['code' => 'de', 'name' => 'Deutsch', 'flag' => 'de'],
+                    ])
+                    ->rememberLocale()
+                    ->showOnAuthPages(),
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -60,6 +74,7 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                ApplyLocale::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,

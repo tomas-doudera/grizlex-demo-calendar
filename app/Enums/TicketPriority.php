@@ -15,12 +15,7 @@ enum TicketPriority: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Low => 'Low',
-            self::Medium => 'Medium',
-            self::High => 'High',
-            self::Critical => 'Critical',
-        };
+        return __('filament/enums.ticket_priority.'.$this->value);
     }
 
     public function getColor(): string

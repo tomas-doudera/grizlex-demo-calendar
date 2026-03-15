@@ -15,13 +15,7 @@ enum StaffRole: string implements HasColor, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Manager => 'Manager',
-            self::Instructor => 'Instructor',
-            self::Receptionist => 'Receptionist',
-            self::Trainer => 'Trainer',
-            self::Maintenance => 'Maintenance',
-        };
+        return __('filament/enums.staff_role.'.$this->value);
     }
 
     public function getColor(): string

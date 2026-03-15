@@ -18,10 +18,11 @@ class ReviewsTable
         return $table
             ->columns([
                 TextColumn::make('customer.first_name')
-                    ->label('Customer')
-                    ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : 'Anonymous')
+                    ->label(__('filament/reviews.columns.customer'))
+                    ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : __('filament/reviews.columns.anonymous'))
                     ->sortable(),
                 TextColumn::make('rating')
+                    ->label(__('filament/reviews.fields.rating'))
                     ->sortable()
                     ->badge()
                     ->color(fn (int $state): string => match (true) {
@@ -30,13 +31,15 @@ class ReviewsTable
                         default => 'danger',
                     }),
                 TextColumn::make('comment')
+                    ->label(__('filament/reviews.fields.comment'))
                     ->limit(60)
                     ->wrap()
                     ->toggleable(),
                 IconColumn::make('is_published')
                     ->boolean()
-                    ->label('Published'),
+                    ->label(__('filament/reviews.columns.published')),
                 TextColumn::make('created_at')
+                    ->label(__('filament/reviews.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->since(),
@@ -44,14 +47,16 @@ class ReviewsTable
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('rating')
+                    ->label(__('filament/reviews.filters.rating'))
                     ->options([
-                        1 => '1 Star',
-                        2 => '2 Stars',
-                        3 => '3 Stars',
-                        4 => '4 Stars',
-                        5 => '5 Stars',
+                        1 => __('filament/reviews.filters.1_star'),
+                        2 => __('filament/reviews.filters.2_stars'),
+                        3 => __('filament/reviews.filters.3_stars'),
+                        4 => __('filament/reviews.filters.4_stars'),
+                        5 => __('filament/reviews.filters.5_stars'),
                     ]),
-                TernaryFilter::make('is_published'),
+                TernaryFilter::make('is_published')
+                    ->label(__('filament/reviews.filters.is_published')),
             ])
             ->recordActions([
                 EditAction::make(),

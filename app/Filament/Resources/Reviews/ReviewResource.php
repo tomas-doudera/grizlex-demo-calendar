@@ -20,9 +20,22 @@ class ReviewResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Finance';
-
     protected static ?int $navigationSort = 2;
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/reviews.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/reviews.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.finance');
+    }
 
     public static function form(Schema $schema): Schema
     {

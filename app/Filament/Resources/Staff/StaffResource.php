@@ -20,13 +20,24 @@ class StaffResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
-
     protected static ?int $navigationSort = 5;
 
     protected static ?string $recordTitleAttribute = 'first_name';
 
-    protected static ?string $pluralModelLabel = 'Staff';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.reservations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/staff.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/staff.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {

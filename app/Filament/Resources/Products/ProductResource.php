@@ -22,9 +22,22 @@ class ProductResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Shop';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/products.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/products.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.shop');
+    }
 
     public static function form(Schema $schema): Schema
     {

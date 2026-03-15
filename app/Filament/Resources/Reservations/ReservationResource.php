@@ -20,9 +20,22 @@ class ReservationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/reservations.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/reservations.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.reservations');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -22,11 +22,24 @@ class CustomerResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CRM';
-
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'first_name';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/customers.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/customers.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.crm');
+    }
 
     public static function form(Schema $schema): Schema
     {

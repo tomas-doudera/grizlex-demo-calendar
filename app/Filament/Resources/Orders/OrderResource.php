@@ -20,11 +20,24 @@ class OrderResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingCart;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Shop';
-
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'order_number';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/orders.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/orders.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.shop');
+    }
 
     public static function form(Schema $schema): Schema
     {

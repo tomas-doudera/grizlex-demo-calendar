@@ -17,40 +17,42 @@ class ReservationsTable
         return $table
             ->columns([
                 TextColumn::make('from_time')
-                    ->label('Date & Time')
+                    ->label(__('filament/reservations.columns.date_time'))
                     ->dateTime('M j, Y H:i')
                     ->sortable()
                     ->description(fn ($record): string => $record->to_time ? 'to '.$record->to_time->format('H:i') : ''),
                 TextColumn::make('company.title')
-                    ->label('Company')
+                    ->label(__('filament/reservations.columns.company'))
                     ->sortable()
                     ->toggleable(),
                 TextColumn::make('place.title')
-                    ->label('Venue')
+                    ->label(__('filament/reservations.columns.venue'))
                     ->sortable(),
                 TextColumn::make('service.name')
-                    ->label('Service')
-                    ->placeholder('N/A')
+                    ->label(__('filament/reservations.columns.service'))
+                    ->placeholder(__('filament/reservations.placeholders.na'))
                     ->toggleable(),
                 TextColumn::make('staff.first_name')
-                    ->label('Staff')
+                    ->label(__('filament/reservations.columns.staff'))
                     ->state(fn ($record): string => $record->staff ? "{$record->staff->first_name} {$record->staff->last_name}" : '')
-                    ->placeholder('Unassigned')
+                    ->placeholder(__('filament/reservations.placeholders.unassigned'))
                     ->toggleable(),
                 TextColumn::make('status')
+                    ->label(__('filament/reservations.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('guest_name')
-                    ->label('Guest')
-                    ->placeholder('N/A')
+                    ->label(__('filament/reservations.columns.guest'))
+                    ->placeholder(__('filament/reservations.placeholders.na'))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('total_price')
+                    ->label(__('filament/reservations.fields.total_price'))
                     ->money('USD')
                     ->sortable()
                     ->placeholder('—'),
                 TextColumn::make('booked_count')
-                    ->label('Booked')
+                    ->label(__('filament/reservations.columns.booked'))
                     ->sortable()
                     ->suffix(fn ($record): string => $record->capacity ? " / {$record->capacity}" : '')
                     ->toggleable(),
@@ -58,12 +60,15 @@ class ReservationsTable
             ->defaultSort('from_time', 'desc')
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('filament/reservations.filters.status'))
                     ->options(ReservationStatus::class)
                     ->multiple(),
                 SelectFilter::make('company')
+                    ->label(__('filament/reservations.filters.company'))
                     ->relationship('company', 'title')
                     ->preload(),
                 SelectFilter::make('place')
+                    ->label(__('filament/reservations.filters.place'))
                     ->relationship('place', 'title')
                     ->searchable()
                     ->preload(),

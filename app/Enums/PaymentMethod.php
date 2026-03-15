@@ -13,11 +13,6 @@ enum PaymentMethod: string implements HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Cash => 'Cash',
-            self::CreditCard => 'Credit Card',
-            self::BankTransfer => 'Bank Transfer',
-            self::Online => 'Online',
-        };
+        return __('filament/enums.payment_method.'.$this->value);
     }
 }

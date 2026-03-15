@@ -15,12 +15,7 @@ enum ProductStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Draft => 'Draft',
-            self::Active => 'Active',
-            self::Archived => 'Archived',
-            self::Discontinued => 'Discontinued',
-        };
+        return __('filament/enums.product_status.'.$this->value);
     }
 
     public function getColor(): string

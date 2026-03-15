@@ -20,9 +20,22 @@ class PaymentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBanknotes;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Finance';
-
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/payments.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/payments.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.finance');
+    }
 
     public static function form(Schema $schema): Schema
     {

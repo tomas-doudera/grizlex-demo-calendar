@@ -20,11 +20,24 @@ class ServiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSparkles;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
-
     protected static ?int $navigationSort = 4;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/services.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/services.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.reservations');
+    }
 
     public static function form(Schema $schema): Schema
     {

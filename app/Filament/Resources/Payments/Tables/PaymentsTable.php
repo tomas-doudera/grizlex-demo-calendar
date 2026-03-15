@@ -19,15 +19,17 @@ class PaymentsTable
         return $table
             ->columns([
                 TextColumn::make('payment_number')
+                    ->label(__('filament/payments.fields.payment_number'))
                     ->searchable()
                     ->sortable()
                     ->weight('medium')
                     ->copyable(),
                 TextColumn::make('customer.first_name')
-                    ->label('Customer')
+                    ->label(__('filament/payments.columns.customer'))
                     ->state(fn ($record): string => $record->customer ? "{$record->customer->first_name} {$record->customer->last_name}" : 'N/A')
                     ->sortable(),
                 TextColumn::make('amount')
+                    ->label(__('filament/payments.fields.amount'))
                     ->money('USD')
                     ->sortable()
                     ->summarize([
@@ -35,18 +37,22 @@ class PaymentsTable
                             ->money('USD'),
                     ]),
                 TextColumn::make('status')
+                    ->label(__('filament/payments.fields.status'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('method')
+                    ->label(__('filament/payments.fields.method'))
                     ->badge()
                     ->color('gray')
                     ->toggleable(),
                 TextColumn::make('paid_at')
+                    ->label(__('filament/payments.fields.paid_at'))
                     ->dateTime()
                     ->sortable()
-                    ->placeholder('Not paid')
+                    ->placeholder(__('filament/payments.columns.not_paid'))
                     ->toggleable(),
                 TextColumn::make('created_at')
+                    ->label(__('filament/payments.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->since()
@@ -55,9 +61,11 @@ class PaymentsTable
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('filament/payments.filters.status'))
                     ->options(PaymentStatus::class)
                     ->multiple(),
                 SelectFilter::make('method')
+                    ->label(__('filament/payments.filters.method'))
                     ->options(PaymentMethod::class),
             ])
             ->recordActions([

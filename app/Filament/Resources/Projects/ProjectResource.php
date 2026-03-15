@@ -20,11 +20,24 @@ class ProjectResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'CRM';
-
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/projects.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/projects.plural_label');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.crm');
+    }
 
     public static function form(Schema $schema): Schema
     {

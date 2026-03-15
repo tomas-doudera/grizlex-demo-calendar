@@ -16,13 +16,7 @@ enum PaymentStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Pending => 'Pending',
-            self::Paid => 'Paid',
-            self::PartiallyPaid => 'Partially Paid',
-            self::Refunded => 'Refunded',
-            self::Failed => 'Failed',
-        };
+        return __('filament/enums.payment_status.'.$this->value);
     }
 
     public function getColor(): string

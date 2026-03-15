@@ -16,13 +16,7 @@ enum TicketStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Open => 'Open',
-            self::InProgress => 'In Progress',
-            self::WaitingOnCustomer => 'Waiting on Customer',
-            self::Resolved => 'Resolved',
-            self::Closed => 'Closed',
-        };
+        return __('filament/enums.ticket_status.'.$this->value);
     }
 
     public function getColor(): string

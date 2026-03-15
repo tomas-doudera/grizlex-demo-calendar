@@ -16,13 +16,7 @@ enum ProjectStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Planning => 'Planning',
-            self::Active => 'Active',
-            self::OnHold => 'On Hold',
-            self::Completed => 'Completed',
-            self::Cancelled => 'Cancelled',
-        };
+        return __('filament/enums.project_status.'.$this->value);
     }
 
     public function getColor(): string

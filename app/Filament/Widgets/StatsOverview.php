@@ -20,23 +20,23 @@ class StatsOverview extends StatsOverviewWidget
         $openTickets = Ticket::query()->whereIn('status', ['open', 'in_progress'])->count();
 
         return [
-            Stat::make('Total Revenue', '$'.number_format($totalRevenue, 2))
-                ->description('Lifetime revenue')
+            Stat::make(__('filament/widgets.stats.total_revenue'), '$'.number_format($totalRevenue, 2))
+                ->description(__('filament/widgets.stats.lifetime_revenue'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart([7, 3, 4, 5, 6, 3, 5, 8])
                 ->color('success'),
-            Stat::make('Total Orders', (string) $orderCount)
-                ->description('All time')
+            Stat::make(__('filament/widgets.stats.total_orders'), (string) $orderCount)
+                ->description(__('filament/widgets.stats.all_time'))
                 ->descriptionIcon('heroicon-m-shopping-cart')
                 ->chart([3, 5, 7, 6, 4, 8, 5, 7])
                 ->color('info'),
-            Stat::make('Customers', (string) $customerCount)
-                ->description('Active customers')
+            Stat::make(__('filament/widgets.stats.customers'), (string) $customerCount)
+                ->description(__('filament/widgets.stats.active_customers'))
                 ->descriptionIcon('heroicon-m-users')
                 ->chart([5, 3, 6, 4, 7, 8, 5, 6])
                 ->color('primary'),
-            Stat::make('Open Tickets', (string) $openTickets)
-                ->description('Needs attention')
+            Stat::make(__('filament/widgets.stats.open_tickets'), (string) $openTickets)
+                ->description(__('filament/widgets.stats.needs_attention'))
                 ->descriptionIcon('heroicon-m-ticket')
                 ->chart([8, 6, 4, 5, 7, 3, 5, 4])
                 ->color($openTickets > 10 ? 'danger' : 'warning'),

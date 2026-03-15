@@ -17,14 +17,7 @@ enum ReservationStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Pending => 'Pending',
-            self::Confirmed => 'Confirmed',
-            self::CheckedIn => 'Checked In',
-            self::Completed => 'Completed',
-            self::Cancelled => 'Cancelled',
-            self::NoShow => 'No Show',
-        };
+        return __('filament/enums.reservation_status.'.$this->value);
     }
 
     public function getColor(): string

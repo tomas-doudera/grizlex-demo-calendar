@@ -20,13 +20,29 @@ class PlaceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMapPin;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
-
     protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationLabel = 'Venues';
-
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('filament/navigation.groups.reservations');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('filament/places.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/places.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/places.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {

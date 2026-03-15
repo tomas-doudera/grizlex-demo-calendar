@@ -17,14 +17,7 @@ enum OrderStatus: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::Pending => 'Pending',
-            self::Processing => 'Processing',
-            self::Shipped => 'Shipped',
-            self::Delivered => 'Delivered',
-            self::Cancelled => 'Cancelled',
-            self::Refunded => 'Refunded',
-        };
+        return __('filament/enums.order_status.'.$this->value);
     }
 
     public function getColor(): string
