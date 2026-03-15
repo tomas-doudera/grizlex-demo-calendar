@@ -31,6 +31,13 @@ use TomasDoudera\CalMe\Widgets\CalMeWidget;
 
 class CalendarWidget extends CalMeWidget
 {
+    protected array $cellDimensions = [
+        'week-vertical' => [
+            'cell_width' => 150,
+            'cell_height' => 75,
+        ],
+    ];
+
     public function filtersForm(Schema $schema): Schema
     {
         return $schema->schema([
