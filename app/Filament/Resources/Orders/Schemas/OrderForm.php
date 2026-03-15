@@ -21,7 +21,7 @@ class OrderForm
             ->components([
                 Grid::make(3)
                     ->schema([
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(2)
                             ->schema([
                                 Section::make('Order Details')
@@ -87,7 +87,7 @@ class OrderForm
                                             ->rows(3),
                                     ]),
                             ]),
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(1)
                             ->schema([
                                 Section::make('Totals')

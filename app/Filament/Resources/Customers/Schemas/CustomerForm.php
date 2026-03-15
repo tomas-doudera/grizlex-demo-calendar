@@ -18,7 +18,7 @@ class CustomerForm
         return $schema
             ->columns(3)
             ->components([
-                Grid::make()
+                Grid::make(1)
                     ->columnSpan(2)
                     ->schema([
                         Section::make('Personal Information')
@@ -69,7 +69,7 @@ class CustomerForm
                                     ->searchable(),
                             ]),
                     ]),
-                Grid::make()
+                Grid::make(1)
                     ->columnSpan(1)
                     ->schema([
                         Section::make('Status')

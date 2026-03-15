@@ -22,7 +22,7 @@ class TicketForm
             ->components([
                 Grid::make(3)
                     ->schema([
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(2)
                             ->schema([
                                 Section::make('Ticket Information')
@@ -63,7 +63,7 @@ class TicketForm
                                             ->columnSpanFull(),
                                     ]),
                             ]),
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(1)
                             ->schema([
                                 Section::make('Status & Priority')

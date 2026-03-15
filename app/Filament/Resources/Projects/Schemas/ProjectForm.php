@@ -21,7 +21,7 @@ class ProjectForm
             ->components([
                 Grid::make(3)
                     ->schema([
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(2)
                             ->schema([
                                 Section::make('Project Details')
@@ -47,7 +47,7 @@ class ProjectForm
                                             ->afterOrEqual('start_date'),
                                     ]),
                             ]),
-                        Grid::make()
+                        Grid::make(1)
                             ->columnSpan(1)
                             ->schema([
                                 Section::make('Progress & Budget')
