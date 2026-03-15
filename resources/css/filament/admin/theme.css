@@ -384,8 +384,13 @@
 
 /* ─── Calendar events — soft tinted backgrounds with left accent ─── */
 .cal-event {
-    @apply !border-0 !border-l-[3px] !rounded-md !overflow-hidden;
+    @apply !border-0 !border-l-[3px] !border-b !rounded-md !overflow-hidden;
     border-left-color: var(--cal-event-color, #3b82f6) !important;
+    border-bottom-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 35%, white) !important;
+}
+
+:is(.dark) .cal-event {
+    border-bottom-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 30%, #18181b) !important;
 }
 
 .cal-event-content {
