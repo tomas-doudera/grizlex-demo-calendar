@@ -10,9 +10,9 @@ class Calendar extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
-    protected static ?string $navigationLabel = 'Calendar';
+    protected static ?string $navigationLabel = 'Base Calendar';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Calendars';
 
     protected static ?int $navigationSort = 0;
 

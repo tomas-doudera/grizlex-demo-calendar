@@ -12,7 +12,7 @@ class AvatarCalendar extends Page
 
     protected static ?string $navigationLabel = 'Avatar Calendar';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Calendars';
 
     protected static ?int $navigationSort = 2;
 

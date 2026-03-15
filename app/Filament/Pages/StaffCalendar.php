@@ -12,7 +12,7 @@ class StaffCalendar extends Page
 
     protected static ?string $navigationLabel = 'Staff Calendar';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Reservations';
+    protected static string|\UnitEnum|null $navigationGroup = 'Calendars';
 
     protected static ?int $navigationSort = 1;
 
