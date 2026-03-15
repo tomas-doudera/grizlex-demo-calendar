@@ -134,13 +134,21 @@ class ShowcaseSeeder extends Seeder
             $services->push(...$created);
         });
 
-        // Staff
+        // Staff (some with avatar images, some without)
+        $avatarIndex = 1;
         $staff = collect();
-        $companies->each(function (Company $company) use ($staff) {
-            $created = Staff::factory(fake()->numberBetween(3, 6))
-                ->for($company)
-                ->create();
-            $staff->push(...$created);
+        $companies->each(function (Company $company) use ($staff, &$avatarIndex) {
+            $count = fake()->numberBetween(3, 6);
+            foreach (range(1, $count) as $i) {
+                $hasAvatar = fake()->boolean(70);
+                $created = Staff::factory()
+                    ->for($company)
+                    ->create([
+                        'avatar_url' => $hasAvatar ? "https://i.pravatar.cc/150?img={$avatarIndex}" : null,
+                    ]);
+                $staff->push($created);
+                $avatarIndex++;
+            }
         });
 
         $places = Place::all();

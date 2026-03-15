@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Staff\Schemas;
 
 use App\Enums\StaffRole;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -20,6 +22,14 @@ class StaffForm
                 Section::make('Staff Details')
                     ->columns(2)
                     ->schema([
+                        FileUpload::make('avatar_url')
+                            ->label('Avatar')
+                            ->avatar()
+                            ->disk('public')
+                            ->directory('staff-avatars')
+                            ->visibility('public')
+                            ->imageEditor()
+                            ->columnSpanFull(),
                         TextInput::make('first_name')
                             ->required(),
                         TextInput::make('last_name')
