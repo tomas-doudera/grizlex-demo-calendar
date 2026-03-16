@@ -36,7 +36,7 @@ return [
         'no_company' => 'Kein Unternehmen',
         'active' => 'Aktiv',
         'vip' => 'VIP',
-        'orders' => 'Bestellungen',
+        'reservations' => 'Reservierungen',
         'not_set' => 'Nicht festgelegt',
         'no_notes' => 'Keine Notizen',
         'email' => 'E-Mail',

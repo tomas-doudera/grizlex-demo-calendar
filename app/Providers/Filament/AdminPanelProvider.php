@@ -2,6 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Domain\Booking\BookingPlugin;
+use App\Domain\ClassBooking\ClassBookingPlugin;
+use App\Domain\Finance\FinancePlugin;
+use App\Domain\IndividualBooking\IndividualBookingPlugin;
+use App\Domain\Notification\NotificationPlugin;
+use App\Domain\PlaceBooking\PlaceBookingPlugin;
+use App\Domain\Shared\SharedPlugin;
 use App\Http\Middleware\ApplyLocale;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -46,10 +53,15 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.reservations')),
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.crm')),
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.finance')),
-                NavigationGroup::make(fn (): string => __('filament/navigation.groups.shop')),
-                NavigationGroup::make(fn (): string => __('filament/navigation.groups.support')),
             ])
             ->plugins([
+                SharedPlugin::make(),
+                BookingPlugin::make(),
+                IndividualBookingPlugin::make(),
+                ClassBookingPlugin::make(),
+                PlaceBookingPlugin::make(),
+                FinancePlugin::make(),
+                NotificationPlugin::make(),
                 CalMePlugin::make(),
                 FilamentLanguageSwitcherPlugin::make()
                     ->locales([
@@ -61,13 +73,8 @@ class AdminPanelProvider extends PanelProvider
                     ->rememberLocale()
                     ->showOnAuthPages(),
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
-            ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
-            ->widgets([
             ])
             ->sidebarWidth('18rem')
             ->middleware([

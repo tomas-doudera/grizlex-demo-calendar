@@ -6,8 +6,6 @@ return [
         'reservations' => 'Reservierungen',
         'crm' => 'CRM',
         'finance' => 'Finanzen',
-        'shop' => 'Shop',
-        'support' => 'Support',
     ],
     'pages' => [
         'dashboard' => 'Dashboard',

@@ -30,4 +30,11 @@ return [
         'company' => 'Unternehmen',
         'is_active' => 'Aktiv',
     ],
+    'breaks' => [
+        'date' => 'Bestimmtes Datum',
+        'date_help' => 'Leer lassen für eine wöchentlich wiederkehrende Pause.',
+        'day_of_week' => 'Wochentag',
+        'day_of_week_help' => 'Für wöchentlich wiederkehrende Pausen. Wird ignoriert, wenn ein Datum gesetzt ist.',
+        'recurring' => 'Wiederkehrend',
+    ],
 ];

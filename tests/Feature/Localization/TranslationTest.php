@@ -1,9 +1,8 @@
 <?php
 
-use App\Enums\OrderStatus;
-use App\Enums\ReservationStatus;
-use App\Enums\StaffRole;
-use App\Models\User;
+use App\Domain\Booking\Enums\ReservationStatus;
+use App\Domain\IndividualBooking\Enums\StaffRole;
+use App\Domain\Shared\Models\User;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Facades\Filament;
 
@@ -19,10 +18,6 @@ $translationFiles = [
     'payments',
     'reviews',
     'customers',
-    'orders',
-    'products',
-    'tickets',
-    'projects',
     'widgets',
     'enums',
 ];
@@ -71,19 +66,12 @@ test('navigation translations resolve correctly for each locale', function (stri
     expect(__('filament/navigation.groups.reservations'))->not->toBe('filament/navigation.groups.reservations');
     expect(__('filament/navigation.groups.crm'))->not->toBe('filament/navigation.groups.crm');
     expect(__('filament/navigation.groups.finance'))->not->toBe('filament/navigation.groups.finance');
-    expect(__('filament/navigation.groups.shop'))->not->toBe('filament/navigation.groups.shop');
-    expect(__('filament/navigation.groups.support'))->not->toBe('filament/navigation.groups.support');
 })->with($locales);
 
 test('enum labels are translated correctly', function (string $locale) {
     app()->setLocale($locale);
 
     foreach (ReservationStatus::cases() as $status) {
-        $label = $status->getLabel();
-        expect($label)->not->toContain('filament/enums', "Enum label not translated for {$status->name} in locale {$locale}");
-    }
-
-    foreach (OrderStatus::cases() as $status) {
         $label = $status->getLabel();
         expect($label)->not->toContain('filament/enums', "Enum label not translated for {$status->name} in locale {$locale}");
     }
@@ -106,7 +94,7 @@ test('German locale returns German translations', function () {
     app()->setLocale('de');
 
     expect(__('filament/navigation.groups.calendars'))->toBe('Kalender');
-    expect(__('filament/navigation.groups.shop'))->toBe('Shop');
+    expect(__('filament/navigation.groups.finance'))->toBe('Finanzen');
     expect(__('filament/navigation.pages.dashboard'))->toBe('Dashboard');
 });
 

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Reservation;
+use App\Domain\Booking\Models\Reservation;
 use Illuminate\Database\Seeder;
 
 class ReservationSeeder extends Seeder

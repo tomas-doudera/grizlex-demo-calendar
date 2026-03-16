@@ -30,4 +30,11 @@ return [
         'company' => 'Společnost',
         'is_active' => 'Aktivní',
     ],
+    'breaks' => [
+        'date' => 'Konkrétní datum',
+        'date_help' => 'Ponechte prázdné pro opakující se týdenní přestávku.',
+        'day_of_week' => 'Den v týdnu',
+        'day_of_week_help' => 'Pro opakující se týdenní přestávky. Ignorováno, pokud je nastaveno datum.',
+        'recurring' => 'Opakující se',
+    ],
 ];

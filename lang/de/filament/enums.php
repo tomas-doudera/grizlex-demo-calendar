@@ -9,14 +9,6 @@ return [
         'cancelled' => 'Storniert',
         'no_show' => 'Nicht erschienen',
     ],
-    'order_status' => [
-        'pending' => 'Ausstehend',
-        'processing' => 'In Bearbeitung',
-        'shipped' => 'Versendet',
-        'delivered' => 'Zugestellt',
-        'cancelled' => 'Storniert',
-        'refunded' => 'Erstattet',
-    ],
     'staff_role' => [
         'manager' => 'Manager',
         'instructor' => 'Kursleiter',
@@ -29,6 +21,12 @@ return [
         'credit_card' => 'Kreditkarte',
         'bank_transfer' => 'Banküberweisung',
         'online' => 'Online',
+        'stripe' => 'Stripe',
+    ],
+    'reservation_type' => [
+        'individual' => 'Einzeln',
+        'class' => 'Kurs',
+        'place' => 'Raum',
     ],
     'payment_status' => [
         'pending' => 'Ausstehend',
@@ -37,30 +35,13 @@ return [
         'refunded' => 'Erstattet',
         'failed' => 'Fehlgeschlagen',
     ],
-    'ticket_status' => [
-        'open' => 'Offen',
-        'in_progress' => 'In Bearbeitung',
-        'waiting_on_customer' => 'Warten auf Kunde',
-        'resolved' => 'Gelöst',
-        'closed' => 'Geschlossen',
-    ],
-    'ticket_priority' => [
-        'low' => 'Niedrig',
-        'medium' => 'Mittel',
-        'high' => 'Hoch',
-        'critical' => 'Kritisch',
-    ],
-    'project_status' => [
-        'planning' => 'Planung',
-        'active' => 'Aktiv',
-        'on_hold' => 'Pausiert',
-        'completed' => 'Abgeschlossen',
-        'cancelled' => 'Storniert',
-    ],
-    'product_status' => [
-        'draft' => 'Entwurf',
-        'active' => 'Aktiv',
-        'archived' => 'Archiviert',
-        'discontinued' => 'Eingestellt',
+    'day_of_week' => [
+        'monday' => 'Montag',
+        'tuesday' => 'Dienstag',
+        'wednesday' => 'Mittwoch',
+        'thursday' => 'Donnerstag',
+        'friday' => 'Freitag',
+        'saturday' => 'Samstag',
+        'sunday' => 'Sonntag',
     ],
 ];

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Domain\Shared\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create([
@@ -37,7 +37,7 @@ test('switching to Czech translates navigation groups', function () {
     $page->wait(1)
         ->assertSee('Kalendáře')
         ->assertSee('Rezervace')
-        ->assertSee('Podpora');
+        ->assertSee('Finance');
 });
 
 test('switching to German translates navigation groups', function () {
@@ -61,7 +61,7 @@ test('switching to Slovak translates navigation groups', function () {
     $page->wait(1)
         ->assertSee('Kalendáre')
         ->assertSee('Rezervácie')
-        ->assertSee('Podpora');
+        ->assertSee('Financie');
 });
 
 test('English locale shows English navigation', function () {
@@ -73,7 +73,7 @@ test('English locale shows English navigation', function () {
     $page->wait(1)
         ->assertSee('Calendars')
         ->assertSee('Reservations')
-        ->assertSee('Support');
+        ->assertSee('Finance');
 });
 
 test('Czech locale translates dashboard widget labels', function () {
@@ -84,9 +84,9 @@ test('Czech locale translates dashboard widget labels', function () {
 
     $page->wait(1)
         ->assertSee('Celkový příjem')
-        ->assertSee('Celkem objednávek')
+        ->assertSee('Celkem rezervací')
         ->assertSee('Zákazníci')
-        ->assertSee('Otevřené tikety');
+        ->assertSee('Nadcházející');
 });
 
 test('German locale translates dashboard widget labels', function () {
@@ -97,9 +97,9 @@ test('German locale translates dashboard widget labels', function () {
 
     $page->wait(1)
         ->assertSee('Gesamtumsatz')
-        ->assertSee('Bestellungen gesamt')
+        ->assertSee('Reservierungen gesamt')
         ->assertSee('Kunden')
-        ->assertSee('Offene Tickets');
+        ->assertSee('Bevorstehend');
 });
 
 test('admin dashboard has no javascript errors', function () {

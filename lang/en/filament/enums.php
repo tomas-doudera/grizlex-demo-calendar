@@ -9,14 +9,6 @@ return [
         'cancelled' => 'Cancelled',
         'no_show' => 'No Show',
     ],
-    'order_status' => [
-        'pending' => 'Pending',
-        'processing' => 'Processing',
-        'shipped' => 'Shipped',
-        'delivered' => 'Delivered',
-        'cancelled' => 'Cancelled',
-        'refunded' => 'Refunded',
-    ],
     'staff_role' => [
         'manager' => 'Manager',
         'instructor' => 'Instructor',
@@ -29,6 +21,12 @@ return [
         'credit_card' => 'Credit Card',
         'bank_transfer' => 'Bank Transfer',
         'online' => 'Online',
+        'stripe' => 'Stripe',
+    ],
+    'reservation_type' => [
+        'individual' => 'Individual',
+        'class' => 'Class',
+        'place' => 'Place',
     ],
     'payment_status' => [
         'pending' => 'Pending',
@@ -37,30 +35,13 @@ return [
         'refunded' => 'Refunded',
         'failed' => 'Failed',
     ],
-    'ticket_status' => [
-        'open' => 'Open',
-        'in_progress' => 'In Progress',
-        'waiting_on_customer' => 'Waiting on Customer',
-        'resolved' => 'Resolved',
-        'closed' => 'Closed',
-    ],
-    'ticket_priority' => [
-        'low' => 'Low',
-        'medium' => 'Medium',
-        'high' => 'High',
-        'critical' => 'Critical',
-    ],
-    'project_status' => [
-        'planning' => 'Planning',
-        'active' => 'Active',
-        'on_hold' => 'On Hold',
-        'completed' => 'Completed',
-        'cancelled' => 'Cancelled',
-    ],
-    'product_status' => [
-        'draft' => 'Draft',
-        'active' => 'Active',
-        'archived' => 'Archived',
-        'discontinued' => 'Discontinued',
+    'day_of_week' => [
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+        'sunday' => 'Sunday',
     ],
 ];
