@@ -2,12 +2,12 @@
 
 namespace App\Domain\Booking\Filament\Widgets;
 
-use App\Domain\Shared\Models\Company;
-use App\Domain\Shared\Models\Service;
 use App\Domain\Booking\Enums\ReservationStatus;
-use App\Domain\PlaceBooking\Models\Place;
 use App\Domain\Booking\Models\Reservation;
 use App\Domain\IndividualBooking\Models\Staff;
+use App\Domain\PlaceBooking\Models\Place;
+use App\Domain\Shared\Models\Company;
+use App\Domain\Shared\Models\Service;
 use Carbon\CarbonInterface;
 use Closure;
 use Filament\Actions\Action;
@@ -32,6 +32,8 @@ use TomasDoudera\CalMe\Widgets\CalMeWidget;
 
 class StaffCalendarWidget extends CalMeWidget
 {
+    protected static bool $isDiscovered = false;
+
     protected array $cellDimensions = [
         'week-vertical' => [
             'cell_width' => 150,
@@ -227,9 +229,9 @@ class StaffCalendarWidget extends CalMeWidget
                                                         ->where('to_time', '>', $fromTime);
                                                 });
 
-                                                if ($record?->getKey()) {
-                                                    $query->where('id', '!=', $record->getKey());
-                                                }
+                                            if ($record?->getKey()) {
+                                                $query->where('id', '!=', $record->getKey());
+                                            }
 
                                             if ($query->exists()) {
                                                 $fail('The time slot is already occupied.');
@@ -318,13 +320,11 @@ class StaffCalendarWidget extends CalMeWidget
             return false;
         }
 
-
         $openingTime = $fromTime->copy()->setHour($openingHours[$dayOfWeek]['min'])->setMinute(0)->setSecond(0);
         $closingTime = $fromTime->copy()->setHour($openingHours[$dayOfWeek]['max'])->setMinute(0)->setSecond(0);
         $toDayHours = $openingHours[$toTime->format('l')] ?? null;
         $toOpeningTime = $toTime->copy()->setHour($toDayHours['min'])->setMinute(0)->setSecond(0);
         $toClosingTime = $toTime->copy()->setHour($toDayHours['max'])->setMinute(0)->setSecond(0);
-
 
         if ($fromTime->lt($openingTime) || $fromTime->gte($closingTime)) {
             return false;

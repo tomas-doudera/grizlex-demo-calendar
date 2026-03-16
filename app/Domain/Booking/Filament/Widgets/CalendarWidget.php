@@ -2,12 +2,12 @@
 
 namespace App\Domain\Booking\Filament\Widgets;
 
-use App\Domain\Shared\Models\Company;
-use App\Domain\Shared\Models\Service;
 use App\Domain\Booking\Enums\ReservationStatus;
-use App\Domain\PlaceBooking\Models\Place;
 use App\Domain\Booking\Models\Reservation;
 use App\Domain\IndividualBooking\Models\Staff;
+use App\Domain\PlaceBooking\Models\Place;
+use App\Domain\Shared\Models\Company;
+use App\Domain\Shared\Models\Service;
 use Carbon\CarbonInterface;
 use Closure;
 use Filament\Actions\Action;
@@ -31,6 +31,8 @@ use TomasDoudera\CalMe\Widgets\CalMeWidget;
 
 class CalendarWidget extends CalMeWidget
 {
+    protected static bool $isDiscovered = false;
+
     protected array $cellDimensions = [
         'week-vertical' => [
             'cell_width' => 150,
@@ -189,9 +191,9 @@ class CalendarWidget extends CalMeWidget
                                                         ->where('to_time', '>', $fromTime);
                                                 });
 
-                                                if ($record?->getKey()) {
-                                                    $query->where('id', '!=', $record->getKey());
-                                                }
+                                            if ($record?->getKey()) {
+                                                $query->where('id', '!=', $record->getKey());
+                                            }
 
                                             if ($query->exists()) {
                                                 $fail('The time slot is already occupied.');
