@@ -26,6 +26,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Computed;
 use TomasDoudera\CalMe\Widgets\CalMeWidget;
 
@@ -185,12 +186,53 @@ class StaffCalendarWidget extends CalMeWidget
                                 ->live()
                                 ->required()
                                 ->rules([
-                                    function (Get $get) {
-                                        return function (string $attribute, $value, Closure $fail) use ($get) {
+                                    function () {
+                                        return function (string $attribute, $value, Closure $fail): void {
+                                            $time = Carbon::parse($value);
+                                            $dayOfWeek = $time->format('l');
+                                            $openingHours = $this->getOpeningHours();
+                                            $hours = $openingHours[$dayOfWeek] ?? null;
+
+                                            if (! $hours || $hours['max'] === 0) {
+                                                $fail("The venue is closed on {$dayOfWeek}.");
+
+                                                return;
+                                            }
+
+                                            if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
+                                                $fail("Start time must be between {$hours['min']}:00 and {$hours['max']}:00.");
+                                            }
+                                        };
+                                    },
+                                    function (Get $get, ?Model $record) {
+                                        return function (string $attribute, $value, Closure $fail) use ($get, $record): void {
                                             $fromTime = Carbon::parse($get('from_time'));
                                             $toTime = Carbon::parse($value);
+
                                             if ($toTime->isBefore($fromTime)) {
                                                 $fail('The time of the end must be later than the beginning.');
+
+                                                return;
+                                            }
+
+                                            $staffId = $get('staff_id');
+
+                                            if (! $staffId) {
+                                                return;
+                                            }
+
+                                            $query = Reservation::where('staff_id', $staffId)
+                                                ->where(function ($q) use ($fromTime, $toTime) {
+                                                    $q->where('from_time', '<', $toTime)
+                                                        ->where('to_time', '>', $fromTime);
+                                                });
+
+                                                if ($record?->getKey()) {
+                                                    $query->where('id', '!=', $record->getKey());
+                                                }
+
+                                            if ($query->exists()) {
+                                                $fail('The time slot is already occupied.');
                                             }
                                         };
                                     },
@@ -253,6 +295,8 @@ class StaffCalendarWidget extends CalMeWidget
         return [
             Action::make('deleteReservation')
                 ->label('Delete')
+                ->successNotificationTitle(__('cal-me::labels.success_notification'))
+                ->failureNotificationTitle(__('cal-me::labels.failure_notification'))
                 ->icon('heroicon-o-trash')
                 ->color('danger')
                 ->requiresConfirmation()
@@ -263,6 +307,45 @@ class StaffCalendarWidget extends CalMeWidget
 
     protected function validateUpdate(CarbonInterface $fromTime, CarbonInterface $toTime, int $eventId, int $resourceId): bool
     {
+        $openingHours = $this->getOpeningHours();
+        $dayOfWeek = $fromTime->format('l');
+
+        if (! isset($openingHours[$dayOfWeek])) {
+            return false;
+        }
+
+        if ($openingHours[$dayOfWeek]['max'] === 0) {
+            return false;
+        }
+
+
+        $openingTime = $fromTime->copy()->setHour($openingHours[$dayOfWeek]['min'])->setMinute(0)->setSecond(0);
+        $closingTime = $fromTime->copy()->setHour($openingHours[$dayOfWeek]['max'])->setMinute(0)->setSecond(0);
+        $toDayHours = $openingHours[$toTime->format('l')] ?? null;
+        $toOpeningTime = $toTime->copy()->setHour($toDayHours['min'])->setMinute(0)->setSecond(0);
+        $toClosingTime = $toTime->copy()->setHour($toDayHours['max'])->setMinute(0)->setSecond(0);
+
+
+        if ($fromTime->lt($openingTime) || $fromTime->gte($closingTime)) {
+            return false;
+        }
+
+        if ($fromTime->isSameDay($toTime) && $toTime->gt($closingTime)) {
+            return false;
+        }
+
+        if ($fromTime->gte($toTime)) {
+            return false;
+        }
+
+        if (! $toDayHours || $toDayHours['max'] === 0) {
+            return false;
+        }
+
+        if ($toTime->lt($toOpeningTime) || $toTime->gt($toClosingTime)) {
+            return false;
+        }
+
         $overlaps = Reservation::where('id', '!=', $eventId)
             ->where('staff_id', $resourceId)
             ->where(function ($query) use ($fromTime, $toTime) {
