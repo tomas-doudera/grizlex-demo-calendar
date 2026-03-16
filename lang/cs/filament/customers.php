@@ -36,7 +36,7 @@ return [
         'no_company' => 'Bez společnosti',
         'active' => 'Aktivní',
         'vip' => 'VIP',
-        'orders' => 'Objednávky',
+        'reservations' => 'Rezervace',
         'not_set' => 'Nenastaveno',
         'no_notes' => 'Žádné poznámky',
         'email' => 'E-mail',

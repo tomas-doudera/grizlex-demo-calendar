@@ -9,14 +9,6 @@ return [
         'cancelled' => 'Zrušeno',
         'no_show' => 'Nedostavil se',
     ],
-    'order_status' => [
-        'pending' => 'Čekající',
-        'processing' => 'Zpracovává se',
-        'shipped' => 'Odesláno',
-        'delivered' => 'Doručeno',
-        'cancelled' => 'Zrušeno',
-        'refunded' => 'Vráceno',
-    ],
     'staff_role' => [
         'manager' => 'Manažer',
         'instructor' => 'Instruktor',
@@ -29,6 +21,12 @@ return [
         'credit_card' => 'Kreditní karta',
         'bank_transfer' => 'Bankovní převod',
         'online' => 'Online',
+        'stripe' => 'Stripe',
+    ],
+    'reservation_type' => [
+        'individual' => 'Individuální',
+        'class' => 'Skupinová',
+        'place' => 'Prostorová',
     ],
     'payment_status' => [
         'pending' => 'Čekající',
@@ -37,30 +35,13 @@ return [
         'refunded' => 'Vráceno',
         'failed' => 'Neúspěšné',
     ],
-    'ticket_status' => [
-        'open' => 'Otevřený',
-        'in_progress' => 'Probíhá',
-        'waiting_on_customer' => 'Čeká na zákazníka',
-        'resolved' => 'Vyřešeno',
-        'closed' => 'Uzavřeno',
-    ],
-    'ticket_priority' => [
-        'low' => 'Nízká',
-        'medium' => 'Střední',
-        'high' => 'Vysoká',
-        'critical' => 'Kritická',
-    ],
-    'project_status' => [
-        'planning' => 'Plánování',
-        'active' => 'Aktivní',
-        'on_hold' => 'Pozastaveno',
-        'completed' => 'Dokončeno',
-        'cancelled' => 'Zrušeno',
-    ],
-    'product_status' => [
-        'draft' => 'Koncept',
-        'active' => 'Aktivní',
-        'archived' => 'Archivováno',
-        'discontinued' => 'Ukončeno',
+    'day_of_week' => [
+        'monday' => 'Pondělí',
+        'tuesday' => 'Úterý',
+        'wednesday' => 'Středa',
+        'thursday' => 'Čtvrtek',
+        'friday' => 'Pátek',
+        'saturday' => 'Sobota',
+        'sunday' => 'Neděle',
     ],
 ];

@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Company;
-use App\Models\Place;
-use App\Models\Reservation;
-use App\Models\User;
+use App\Domain\Booking\Models\Reservation;
+use App\Domain\PlaceBooking\Models\Place;
+use App\Domain\Shared\Models\Company;
+use App\Domain\Shared\Models\User;
 
 beforeEach(function () {
     $this->user = User::factory()->create([

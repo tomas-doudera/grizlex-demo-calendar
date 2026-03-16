@@ -15,6 +15,7 @@
         "livewire/blaze": "^1.0",
         "livewire/flux": "^2.9.0",
         "livewire/livewire": "^4.0",
+        "stripe/stripe-php": "^16.0",
         "tomas-doudera/cal-me": "dev-main"
     },
     "require-dev": {
@@ -33,9 +34,15 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "classmap": [
+            "app/Domain/Shared/database/factories",
+            "app/Domain/Booking/database/factories",
+            "app/Domain/IndividualBooking/database/factories",
+            "app/Domain/PlaceBooking/database/factories",
+            "app/Domain/Finance/database/factories"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

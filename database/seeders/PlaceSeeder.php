@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Place;
+use App\Domain\PlaceBooking\Models\Place;
 use Illuminate\Database\Seeder;
 
 class PlaceSeeder extends Seeder

@@ -2,96 +2,25 @@
 
 namespace Database\Seeders;
 
-use App\Enums\ReservationStatus;
-use App\Models\Category;
-use App\Models\Comment;
-use App\Models\Company;
-use App\Models\Customer;
-use App\Models\Order;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\Place;
-use App\Models\Product;
-use App\Models\Project;
-use App\Models\Reservation;
-use App\Models\Review;
-use App\Models\Service;
-use App\Models\Staff;
-use App\Models\Ticket;
-use App\Models\User;
+use App\Domain\Booking\Enums\ReservationStatus;
+use App\Domain\Booking\Models\Reservation;
+use App\Domain\Finance\Models\Payment;
+use App\Domain\IndividualBooking\Models\Staff;
+use App\Domain\PlaceBooking\Models\Place;
+use App\Domain\Shared\Models\Company;
+use App\Domain\Shared\Models\Customer;
+use App\Domain\Shared\Models\Review;
+use App\Domain\Shared\Models\Service;
 use Illuminate\Database\Seeder;
 
 class ShowcaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ── Shop ──
-        $categories = Category::factory(8)->create();
-
-        $products = Product::factory(40)
-            ->recycle($categories)
-            ->create();
-
+        // ── CRM ──
         $customers = Customer::factory(25)->create();
         $vipCustomers = Customer::factory(5)->vip()->create();
         $allCustomers = $customers->merge($vipCustomers);
-
-        $users = User::all();
-
-        $allCustomers->each(function (Customer $customer) use ($products) {
-            $orderCount = fake()->numberBetween(0, 5);
-
-            Order::factory($orderCount)
-                ->for($customer)
-                ->create()
-                ->each(function (Order $order) use ($products) {
-                    $itemCount = fake()->numberBetween(1, 4);
-                    $selectedProducts = $products->random(min($itemCount, $products->count()));
-
-                    $selectedProducts->each(function (Product $product) use ($order) {
-                        $quantity = fake()->numberBetween(1, 3);
-
-                        OrderItem::factory()->create([
-                            'order_id' => $order->id,
-                            'product_id' => $product->id,
-                            'product_name' => $product->name,
-                            'quantity' => $quantity,
-                            'unit_price' => $product->price,
-                            'total' => round($quantity * (float) $product->price, 2),
-                        ]);
-                    });
-
-                    $itemsTotal = $order->items()->sum('total');
-                    $order->update([
-                        'subtotal' => $itemsTotal,
-                        'total' => round((float) $itemsTotal + (float) $order->tax + (float) $order->shipping_cost - (float) $order->discount, 2),
-                    ]);
-                });
-        });
-
-        // ── CRM ──
-        $projects = Project::factory(12)
-            ->recycle($allCustomers)
-            ->create();
-
-        $tickets = Ticket::factory(35)
-            ->recycle($allCustomers)
-            ->recycle($projects)
-            ->recycle($users)
-            ->create();
-
-        $tickets->each(function (Ticket $ticket) use ($users) {
-            Comment::factory(fake()->numberBetween(0, 5))
-                ->for($ticket)
-                ->recycle($users)
-                ->create();
-        });
-
-        $allCustomers->each(function (Customer $customer) {
-            $customer->update([
-                'lifetime_value' => $customer->orders()->where('is_paid', true)->sum('total'),
-            ]);
-        });
 
         // ── Reservation System ──
         $companies = Company::all();
@@ -151,7 +80,6 @@ class ShowcaseSeeder extends Seeder
             }
         });
 
-        $places = Place::all();
         $allServices = Service::all();
         $allStaff = Staff::all();
 

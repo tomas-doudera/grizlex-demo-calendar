@@ -1,10 +1,10 @@
 <?php
 
-use App\Filament\Pages\StaffCalendar;
-use App\Models\Company;
-use App\Models\Reservation;
-use App\Models\Staff;
-use App\Models\User;
+use App\Domain\Booking\Filament\Pages\StaffCalendar;
+use App\Domain\Booking\Models\Reservation;
+use App\Domain\IndividualBooking\Models\Staff;
+use App\Domain\Shared\Models\Company;
+use App\Domain\Shared\Models\User;
 use Filament\Facades\Filament;
 
 beforeEach(function () {

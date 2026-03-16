@@ -30,4 +30,11 @@ return [
         'company' => 'Company',
         'is_active' => 'Active',
     ],
+    'breaks' => [
+        'date' => 'Specific Date',
+        'date_help' => 'Leave empty for a recurring weekly break.',
+        'day_of_week' => 'Day of Week',
+        'day_of_week_help' => 'For recurring weekly breaks. Ignored if a specific date is set.',
+        'recurring' => 'Recurring',
+    ],
 ];
