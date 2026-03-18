@@ -30,7 +30,7 @@ class ReservationFactory extends Factory
             'status' => ReservationStatus::Pending,
             'guest_name' => fake()->name(),
             'guest_email' => fake()->safeEmail(),
-            'guest_phone' => fake()->phoneNumber(),
+            'guest_phone' => fake()->numerify('+420#########'),
         ];
     }
 
