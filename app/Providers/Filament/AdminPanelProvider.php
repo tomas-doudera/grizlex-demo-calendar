@@ -29,14 +29,15 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->brandName('Grizlex')
             ->navigationGroups([
-                // NavigationGroup::make(fn (): string => __('filament/navigation.groups.calendars')),
-                NavigationGroup::make(fn (): string => __('filament/navigation.groups.management'))
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.calendars')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.management')),
             ])
             ->plugin(CalMePlugin::make())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
