@@ -45,6 +45,7 @@ class Reservation extends Model
         ];
     }
 
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
@@ -58,5 +59,22 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getColorAttribute(): ?string
+    {
+        return $this->place?->color;
+    }
+
+    public function getStyleAttribute(): ?string
+    {
+        $color = $this->color ?? '#3b82f6';
+
+        return "--cal-event-color: {$color}";
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        return $this->place?->image_url;
     }
 }
