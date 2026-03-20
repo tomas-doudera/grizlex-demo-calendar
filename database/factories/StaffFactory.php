@@ -27,7 +27,7 @@ class StaffFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => $email,
             'phone' => fake()->phoneNumber(),
-            'position' => fake()->randomElement(StaffRole::class),
+            'role' => fake()->randomElement(StaffRole::class),
             'avatar_url' => 'https://i.pravatar.cc/150?u='.$email,
             'color' => fake()->hexColor(),
             'bio' => fake()->paragraph(),

@@ -32,13 +32,13 @@ class Staff extends Model
     {
         return [
             'is_active' => 'boolean',
-            'position' => StaffRole::class,
+            'role' => StaffRole::class,
         ];
     }
 
     public function scopeBookable(Builder $query): Builder
     {
-        return $query->whereIn('position', [
+        return $query->whereIn('role', [
             StaffRole::Trainer->value,
             StaffRole::Instructor->value,
         ])->where('is_active', true);

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('position')->nullable();
+            $table->string('role')->nullable();
             $table->string('avatar_url')->nullable();
             $table->string('color')->nullable();
             $table->text('bio')->nullable();

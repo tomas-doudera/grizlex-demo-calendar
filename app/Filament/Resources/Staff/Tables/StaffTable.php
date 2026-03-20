@@ -50,7 +50,7 @@ class StaffTable
                     ->toggleable(),
             ])
             ->filters([
-                SelectFilter::make('position')
+                SelectFilter::make('role')
                     ->label(__('filament/staff.filters.role'))
                     ->options(StaffRole::class),
                 SelectFilter::make('company')
