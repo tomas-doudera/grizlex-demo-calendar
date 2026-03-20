@@ -18,6 +18,7 @@ class Reservation extends Model
         'company_id',
         'place_id',
         'user_id',
+        'staff_id',
         'from_time',
         'to_time',
         'capacity',
@@ -45,7 +46,6 @@ class Reservation extends Model
         ];
     }
 
-
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);
@@ -59,6 +59,19 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function staff(): BelongsTo
+    {
+        return $this->belongsTo(Staff::class);
+    }
+
+    public function getGuestNameAttribute(): ?string
+    {
+        if ($this->staff) {
+            return $this->staff->first_name . ' ' . $this->staff->last_name;
+        }
+        return $this->attributes['guest_name'] ?? null;
     }
 
     public function getColorAttribute(): ?string
