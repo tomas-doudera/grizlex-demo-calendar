@@ -118,6 +118,12 @@ class CalendarWidget extends CalMeWidget
                                 ->default($arguments['resource_id'] ?? null)
                                 ->live()
                                 ->required(),
+                            Select::make('staff_id')
+                                ->label(__('filament/reservations.fields.staff'))
+                                ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
+                                ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
+                                ->searchable(['first_name', 'last_name'])
+                                ->preload(),
                         ]),
                     Fieldset::make(__('filament/calendar.form.time'))
                         ->schema([
@@ -337,7 +343,7 @@ class CalendarWidget extends CalMeWidget
         }
 
         return Reservation::query()
-            ->with(['place'])
+            ->with(['place', 'staff'])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('from_time', [$startDate, $endDate])
                     ->orWhereBetween('to_time', [$startDate, $endDate])

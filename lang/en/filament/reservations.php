@@ -13,6 +13,7 @@ return [
     'fields' => [
         'company' => 'Company',
         'place' => 'Place',
+        'staff' => 'Trainer',
         'from_time' => 'From',
         'to_time' => 'To',
         'capacity' => 'Capacity',

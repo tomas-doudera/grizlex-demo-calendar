@@ -39,6 +39,12 @@ class ReservationForm
                                             ->required()
                                             ->searchable()
                                             ->preload(),
+                                        Select::make('staff_id')
+                                            ->label(__('filament/reservations.fields.staff'))
+                                            ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
+                                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
+                                            ->searchable()
+                                            ->preload(),
                                         DateTimePicker::make('from_time')
                                             ->label(__('filament/reservations.fields.from_time'))
                                             ->required()
