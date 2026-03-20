@@ -42,10 +42,12 @@ class ReservationForm
                                         DateTimePicker::make('from_time')
                                             ->label(__('filament/reservations.fields.from_time'))
                                             ->required()
+                                            ->minutesStep(5)
                                             ->seconds(false),
                                         DateTimePicker::make('to_time')
                                             ->label(__('filament/reservations.fields.to_time'))
                                             ->required()
+                                            ->minutesStep(5)
                                             ->seconds(false),
                                         TextInput::make('capacity')
                                             ->label(__('filament/reservations.fields.capacity'))
