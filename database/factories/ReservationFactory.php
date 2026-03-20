@@ -8,6 +8,7 @@ use App\Models\Place;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 /**
  * @extends Factory<Reservation>
@@ -19,8 +20,11 @@ class ReservationFactory extends Factory
      */
     public function definition(): array
     {
-        $fromTime = fake()->dateTimeBetween('now', '+14 days');
-        $toTime = (clone $fromTime)->modify('+60 minutes');
+        $fromTime = Carbon::instance(fake()->dateTimeBetween('now', '+14 days'))
+        ->setHour(fake()->numberBetween(8, 15))
+        ->setMinute(fake()->randomElement([0, 15, 30, 45]))
+        ->setSecond(0);
+        $toTime = (clone $fromTime)->addMinutes(60);
 
         return [
             'company_id' => Company::factory(),
