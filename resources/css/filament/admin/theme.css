@@ -1,0 +1,91 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../vendor/tomas-doudera/cal-me/resources/views/**/*';
+@source '../../../../resources/views/vendor/cal-me/**/*';
+
+/* ─── Calendar events — soft tinted backgrounds with left accent ─── */
+.cal-event {
+    @apply !border-0 !border-l-[3px] !border-b !rounded-md !overflow-hidden;
+    border-left-color: var(--cal-event-color, #3b82f6) !important;
+    border-bottom-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 35%, white) !important;
+}
+
+:is(.dark) .cal-event {
+    border-bottom-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 30%, #18181b) !important;
+}
+
+.cal-event-content {
+    @apply !p-1.5 !opacity-100 dark:!opacity-90;
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 15%, white) !important;
+}
+
+:is(.dark) .cal-event-content {
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 25%, rgb(24 24 27)) !important;
+}
+
+.cal-event-content small {
+    @apply !text-[10px] !leading-tight !font-medium;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 80%, black) !important;
+}
+
+:is(.dark) .cal-event-content small {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 60%, white) !important;
+}
+
+.cal-event-content p {
+    @apply !text-[11px] !leading-tight !font-semibold !mt-0.5;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 90%, black) !important;
+}
+
+:is(.dark) .cal-event-content p {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+/* ─── Event title ─── */
+.cal-event-content .cal-event-title {
+    @apply !text-[11px] !leading-tight !font-semibold !mt-0.5;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 90%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-title {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+/* ─── Event meta row (status icon + time) ─── */
+.cal-event-content .cal-event-meta {
+    @apply !overflow-hidden !whitespace-nowrap !text-[10px] !leading-tight;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 70%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-meta {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
+
+.cal-event-content .cal-event-meta-icon {
+    @apply !size-3 !shrink-0;
+    color: inherit !important;
+}
+
+/* ─── Event badge (guest name) ─── */
+.cal-event-content .cal-event-badge {
+    @apply !inline-flex !items-center !gap-1 !text-[9px] !leading-tight !font-medium !rounded-full !px-1.5 !py-px !max-w-full !truncate;
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 25%, white) !important;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 85%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-badge {
+    background-color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 35%, rgb(24 24 27)) !important;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 55%, white) !important;
+}
+
+/* ─── Event capacity (bottom) ─── */
+.cal-event-content .cal-event-capacity {
+    @apply !flex !items-center !gap-0.5 !text-[9px] !leading-tight !tabular-nums;
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 65%, black) !important;
+}
+
+:is(.dark) .cal-event-content .cal-event-capacity {
+    color: color-mix(in srgb, var(--cal-event-color, #3b82f6) 50%, white) !important;
+}
