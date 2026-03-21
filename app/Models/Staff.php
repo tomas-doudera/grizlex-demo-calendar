@@ -21,7 +21,7 @@ class Staff extends Model
         'last_name',
         'email',
         'phone',
-        'position',
+        'role',
         'avatar_url',
         'color',
         'bio',

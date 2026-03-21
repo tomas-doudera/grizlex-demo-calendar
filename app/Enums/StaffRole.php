@@ -28,10 +28,10 @@ enum StaffRole: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::Manager => 'blue',
-            self::Trainer => 'green',
-            self::Instructor => 'purple',
-            self::Receptionist => 'red',
+            self::Manager => 'danger',
+            self::Trainer => 'success',
+            self::Instructor => 'warning',
+            self::Receptionist => 'info',
             self::Other => 'gray',
         };
     }
