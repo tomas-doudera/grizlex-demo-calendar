@@ -1,0 +1,10 @@
+created:
+    - database/factories/ServiceFactory.php
+    - database/factories/ReservationFactory.php
+    - database/migrations/2026_03_21_183305_create_services_table.php
+    - database/migrations/2026_03_21_183306_create_reservations_table.php
+    - app/Models/Service.php
+    - app/Models/Reservation.php
+models:
+    Service: { company_id: 'id foreign:companies', title: string, description: 'text nullable', duration_minutes: 'unsignedInteger default:60', price: 'decimal:8,2 nullable', color: 'string nullable', is_active: 'boolean default:true', sort_order: 'unsignedInteger default:0', relationships: { belongsTo: Company, hasMany: Reservation } }
+    Reservation: { service_id: 'id foreign:services nullable', relationships: { belongsTo: Service } }
