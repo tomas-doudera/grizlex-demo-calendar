@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             PlaceSeeder::class,
             StaffSeeder::class,
+            ServiceSeeder::class,
             ReservationSeeder::class,
         ]);
     }

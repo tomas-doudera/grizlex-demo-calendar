@@ -9,6 +9,8 @@ use App\Models\Reservation;
 use App\Models\User;
 use Livewire\Livewire;
 
+use function Pest\Laravel\assertDatabaseHas;
+
 beforeEach(function () {
     $this->actingAs(User::factory()->create());
 });
@@ -55,7 +57,13 @@ it('can create a reservation', function () {
 });
 
 it('can update a reservation', function () {
-    $reservation = Reservation::factory()->create();
+    $company = Company::factory()->create();
+    $place = Place::factory()->create(['company_id' => $company->id]);
+    $reservation = Reservation::factory()->create([
+        'company_id' => $company->id,
+        'place_id' => $place->id,
+        'staff_id' => null,
+    ]);
 
     Livewire::test(EditReservation::class, ['record' => $reservation->getRouteKey()])
         ->fillForm([
@@ -64,5 +72,8 @@ it('can update a reservation', function () {
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect($reservation->fresh()->guest_name)->toBe('Jane Doe');
+    assertDatabaseHas('reservations', [
+        'id' => $reservation->id,
+        'guest_name' => 'Jane Doe',
+    ]);
 });

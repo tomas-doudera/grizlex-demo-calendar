@@ -19,6 +19,7 @@ class Reservation extends Model
         'place_id',
         'user_id',
         'staff_id',
+        'service_id',
         'from_time',
         'to_time',
         'capacity',
@@ -66,11 +67,17 @@ class Reservation extends Model
         return $this->belongsTo(Staff::class);
     }
 
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
+
     public function getGuestNameAttribute(): ?string
     {
         if ($this->staff) {
-            return $this->staff->first_name . ' ' . $this->staff->last_name;
+            return $this->staff->first_name.' '.$this->staff->last_name;
         }
+
         return $this->attributes['guest_name'] ?? null;
     }
 

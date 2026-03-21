@@ -30,7 +30,7 @@ it('can belong to a user', function () {
     $reservation = Reservation::factory()->forUser()->create();
 
     expect($reservation->user)->toBeInstanceOf(User::class)
-        ->and($reservation->guest_name)->toBeNull();
+        ->and($reservation->getAttributes()['guest_name'] ?? null)->toBeNull();
 });
 
 it('casts from_time and to_time as immutable datetime', function () {

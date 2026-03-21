@@ -239,6 +239,7 @@ class CalendarWidget extends CalMeWidget
                 ])->columns(3),
         ];
     }
+
     protected function getTitle(): ?string
     {
         return __(($this->getCompanyTitle()));
@@ -361,7 +362,6 @@ class CalendarWidget extends CalMeWidget
                 fn ($query, $placeIds) => $query->whereIn('place_id', $placeIds)
             )
             ->get();
-
 
     }
 

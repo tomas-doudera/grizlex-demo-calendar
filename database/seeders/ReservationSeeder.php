@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Models\Service;
 use App\Models\Staff;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,7 @@ class ReservationSeeder extends Seeder
                     'company_id' => $place->company_id,
                     'place_id' => $place->id,
                     'staff_id' => $staffIds->random(),
+                    'service_id' => Service::where('company_id', $place->company_id)->pluck('id')->random(),
                 ]);
         }
     }
