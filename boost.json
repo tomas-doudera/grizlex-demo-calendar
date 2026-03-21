@@ -1,13 +1,23 @@
 {
     "agents": [
-        "cursor"
+        "cursor",
+        "amp",
+        "claude_code",
+        "codex",
+        "gemini",
+        "copilot",
+        "junie",
+        "opencode"
     ],
     "guidelines": true,
-    "herd_mcp": true,
+    "herd_mcp": false,
     "mcp": true,
     "nightwatch_mcp": false,
     "packages": [
-        "livewire/blaze"
+        "livewire/blaze",
+        "filament/blueprint",
+        "filament/filament",
+        "laravel/fortify"
     ],
     "sail": false,
     "skills": [
@@ -15,6 +25,7 @@
         "livewire-development",
         "pest-testing",
         "tailwindcss-development",
+        "fortify-development",
         "blaze-optimize"
     ]
 }
