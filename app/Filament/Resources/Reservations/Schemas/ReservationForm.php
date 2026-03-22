@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 
@@ -46,7 +47,8 @@ class ReservationForm
                                                             ->relationship('place', 'title')
                                                             ->required()
                                                             ->searchable()
-                                                            ->preload(),
+                                                            ->preload()
+                                                            ->live(),
                                                         Select::make('staff_id')
                                                             ->label(__('filament/reservations.fields.staff'))
                                                             ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
@@ -66,10 +68,14 @@ class ReservationForm
                                                         TextInput::make('capacity')
                                                             ->label(__('filament/reservations.fields.capacity'))
                                                             ->numeric()
+                                                            ->minValue(0)
+                                                            ->live()
                                                             ->default(1),
                                                         TextInput::make('booked_count')
                                                             ->label(__('filament/reservations.fields.booked_count'))
                                                             ->numeric()
+                                                            ->minValue(0)
+                                                            ->maxValue(fn (Get $get) => $get('capacity'))
                                                             ->default(0),
                                                     ]),
                                                 Section::make(__('filament/reservations.sections.guest_information'))
@@ -79,6 +85,18 @@ class ReservationForm
                                                             ->label(__('filament/reservations.fields.user'))
                                                             ->relationship('user', 'name')
                                                             ->searchable()
+                                                            ->preload(),
+                                                        Select::make('customer_id')
+                                                            ->label(__('filament/reservations.fields.customer'))
+                                                            ->relationship(
+                                                                'customer',
+                                                                'email',
+                                                                fn ($query) => $query->orderBy('last_name')->orderBy('first_name'),
+                                                            )
+                                                            ->getOptionLabelFromRecordUsing(
+                                                                fn ($record) => "{$record->first_name} {$record->last_name} ({$record->email})",
+                                                            )
+                                                            ->searchable(['first_name', 'last_name', 'email'])
                                                             ->preload(),
                                                         TextInput::make('guest_name')
                                                             ->label(__('filament/reservations.fields.guest_name')),

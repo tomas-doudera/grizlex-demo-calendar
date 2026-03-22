@@ -18,6 +18,7 @@ class Reservation extends Model
         'company_id',
         'place_id',
         'user_id',
+        'customer_id',
         'staff_id',
         'service_id',
         'from_time',
@@ -60,6 +61,11 @@ class Reservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public function staff(): BelongsTo

@@ -20,6 +20,7 @@ return [
         'booked_count' => 'Obsazeno',
         'status' => 'Stav',
         'user' => 'Uživatel',
+        'customer' => 'Zákazník',
         'guest_name' => 'Jméno hosta',
         'guest_email' => 'E-mail hosta',
         'guest_phone' => 'Telefon hosta',

@@ -20,6 +20,7 @@ return [
         'booked_count' => 'Booked',
         'status' => 'Status',
         'user' => 'User',
+        'customer' => 'Customer',
         'guest_name' => 'Guest Name',
         'guest_email' => 'Guest Email',
         'guest_phone' => 'Guest Phone',

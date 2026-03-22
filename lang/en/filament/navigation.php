@@ -4,6 +4,7 @@ return [
     'groups' => [
         'calendars' => 'Calendars',
         'reservations' => 'Reservations',
+        'crm' => 'CRM',
         'management' => 'Management',
     ],
     'pages' => [

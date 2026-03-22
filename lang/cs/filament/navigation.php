@@ -4,6 +4,7 @@ return [
     'groups' => [
         'calendars' => 'Kalendáře',
         'reservations' => 'Rezervace',
+        'crm' => 'CRM',
         'management' => 'Správa',
     ],
     'pages' => [

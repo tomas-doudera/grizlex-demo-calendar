@@ -38,6 +38,8 @@ class ReservationsTable
                 TextColumn::make('booked_count')
                     ->label(__('filament/reservations.columns.booked'))
                     ->sortable()
+                    ->badge()
+                    ->color(fn ($record) => $record->booked_count < $record->capacity ? 'success' : 'danger')
                     ->suffix(fn ($record): string => $record->capacity ? " / {$record->capacity}" : '')
                     ->toggleable(),
                 TextColumn::make('company.title')

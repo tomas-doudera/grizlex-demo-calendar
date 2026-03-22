@@ -1,0 +1,61 @@
+<?php
+
+return [
+    'label' => 'Customer',
+    'plural_label' => 'Customers',
+    'tabs' => [
+        'general' => 'General',
+        'address' => 'Address',
+        'account' => 'Account & notes',
+    ],
+    'sections' => [
+        'personal_information' => 'Personal Information',
+        'company_details' => 'Company Details',
+        'address' => 'Address',
+        'status' => 'Status',
+        'notes' => 'Notes',
+        'account' => 'Account',
+    ],
+    'fields' => [
+        'active' => 'Active',
+        'vip_customer' => 'VIP Customer',
+        'first_name' => 'First Name',
+        'last_name' => 'Last Name',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'date_of_birth' => 'Date of Birth',
+        'company_name' => 'Company Name',
+        'address' => 'Address',
+        'city' => 'City',
+        'state' => 'State',
+        'postal_code' => 'Postal Code',
+        'country' => 'Country',
+        'lifetime_value' => 'Lifetime Value',
+        'notes' => 'Notes',
+        'created_at' => 'Created At',
+    ],
+    'columns' => [
+        'name' => 'Name',
+        'no_company' => 'No company',
+        'active' => 'Active',
+        'vip' => 'VIP',
+        'reservations' => 'Reservations',
+        'not_set' => 'Not set',
+        'no_notes' => 'No notes',
+    ],
+    'filters' => [
+        'country' => 'Country',
+    ],
+    'infolist' => [
+        'reservations_count' => 'Reservations',
+    ],
+    'countries' => [
+        'us' => 'United States',
+        'uk' => 'United Kingdom',
+        'de' => 'Germany',
+        'fr' => 'France',
+        'cz' => 'Czech Republic',
+        'ca' => 'Canada',
+        'au' => 'Australia',
+    ],
+];

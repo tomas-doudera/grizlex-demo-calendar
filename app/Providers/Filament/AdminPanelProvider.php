@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('Grizlex')
             ->navigationGroups([
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.calendars')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.crm')),
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.management')),
             ])
             ->plugin(CalMePlugin::make())

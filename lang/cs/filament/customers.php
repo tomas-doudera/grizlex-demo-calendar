@@ -1,0 +1,61 @@
+<?php
+
+return [
+    'label' => 'Zákazník',
+    'plural_label' => 'Zákazníci',
+    'tabs' => [
+        'general' => 'Obecné',
+        'address' => 'Adresa',
+        'account' => 'Účet a poznámky',
+    ],
+    'sections' => [
+        'personal_information' => 'Osobní údaje',
+        'company_details' => 'Firma',
+        'address' => 'Adresa',
+        'status' => 'Stav',
+        'notes' => 'Poznámky',
+        'account' => 'Účet',
+    ],
+    'fields' => [
+        'active' => 'Aktivní',
+        'vip_customer' => 'VIP zákazník',
+        'first_name' => 'Jméno',
+        'last_name' => 'Příjmení',
+        'email' => 'E-mail',
+        'phone' => 'Telefon',
+        'date_of_birth' => 'Datum narození',
+        'company_name' => 'Název firmy',
+        'address' => 'Adresa',
+        'city' => 'Město',
+        'state' => 'Kraj / stát',
+        'postal_code' => 'PSČ',
+        'country' => 'Země',
+        'lifetime_value' => 'Celková hodnota',
+        'notes' => 'Poznámky',
+        'created_at' => 'Vytvořeno',
+    ],
+    'columns' => [
+        'name' => 'Jméno',
+        'no_company' => 'Bez firmy',
+        'active' => 'Aktivní',
+        'vip' => 'VIP',
+        'reservations' => 'Rezervace',
+        'not_set' => 'Není vyplněno',
+        'no_notes' => 'Bez poznámek',
+    ],
+    'filters' => [
+        'country' => 'Země',
+    ],
+    'infolist' => [
+        'reservations_count' => 'Počet rezervací',
+    ],
+    'countries' => [
+        'us' => 'Spojené státy',
+        'uk' => 'Spojené království',
+        'de' => 'Německo',
+        'fr' => 'Francie',
+        'cz' => 'Česká republika',
+        'ca' => 'Kanada',
+        'au' => 'Austrálie',
+    ],
+];

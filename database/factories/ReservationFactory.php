@@ -30,6 +30,7 @@ class ReservationFactory extends Factory
         return [
             'company_id' => Company::factory(),
             'place_id' => Place::factory(),
+            'customer_id' => null,
             'staff_id' => Staff::factory(),
             'from_time' => $fromTime,
             'to_time' => $toTime,

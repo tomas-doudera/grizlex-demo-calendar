@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             PlaceSeeder::class,
             StaffSeeder::class,
             ServiceSeeder::class,
+            CustomerSeeder::class,
             ReservationSeeder::class,
         ]);
     }
