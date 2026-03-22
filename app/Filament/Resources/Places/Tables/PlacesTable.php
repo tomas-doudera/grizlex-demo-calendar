@@ -35,6 +35,8 @@ class PlacesTable
                     ->color('gray'),
                 TextColumn::make('capacity')
                     ->label(__('filament/places.fields.capacity'))
+                    ->badge()
+                    ->color('info')
                     ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean()
