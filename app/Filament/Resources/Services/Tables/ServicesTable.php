@@ -36,9 +36,6 @@ class ServicesTable
                     ->label(__('filament/services.fields.price'))
                     ->money('USD')
                     ->sortable(),
-                TextColumn::make('sort_order')
-                    ->label(__('filament/services.columns.sort_order'))
-                    ->sortable(),
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label(__('filament/services.columns.active')),
