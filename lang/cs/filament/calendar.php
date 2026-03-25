@@ -21,6 +21,11 @@ return [
         'guest_name' => 'Jméno hosta',
         'guest_email' => 'E-mail hosta',
         'guest_phone' => 'Telefon hosta',
+        'customers' => 'Zákazníci',
+        'customer_section' => 'Informace o zákazníkovi',
+        'customer_name' => 'Jméno zákazníka',
+        'customer_email' => 'E-mail zákazníka',
+        'customer_phone' => 'Telefon zákazníka',
         'notes' => 'Poznámky',
     ],
     'actions' => [

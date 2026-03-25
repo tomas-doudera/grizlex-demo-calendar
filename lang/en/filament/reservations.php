@@ -6,7 +6,11 @@ return [
 
     'sections' => [
         'booking_details' => 'Booking Details',
+        'location_and_staff' => 'Location & staff',
+        'time' => 'Time',
+        'capacity' => 'Capacity',
         'guest_information' => 'Guest Information',
+        'customer_information' => 'Customer Information',
         'status' => 'Status',
     ],
 
@@ -20,7 +24,7 @@ return [
         'booked_count' => 'Booked',
         'status' => 'Status',
         'user' => 'User',
-        'customer' => 'Customer',
+        'customers' => 'Customers',
         'guest_name' => 'Guest Name',
         'guest_email' => 'Guest Email',
         'guest_phone' => 'Guest Phone',

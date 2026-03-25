@@ -21,6 +21,11 @@ return [
         'guest_name' => 'Guest Name',
         'guest_email' => 'Guest Email',
         'guest_phone' => 'Guest Phone',
+        'customers' => 'Customers',
+        'customer_section' => 'Customer Information',
+        'customer_name' => 'Customer Name',
+        'customer_email' => 'Customer Email',
+        'customer_phone' => 'Customer Phone',
         'notes' => 'Notes',
     ],
     'actions' => [

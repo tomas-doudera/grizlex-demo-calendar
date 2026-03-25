@@ -6,7 +6,11 @@ return [
 
     'sections' => [
         'booking_details' => 'Detaily rezervace',
+        'location_and_staff' => 'Místo a trenér',
+        'time' => 'Čas',
+        'capacity' => 'Kapacita',
         'guest_information' => 'Informace o hostovi',
+        'customer_information' => 'Informace o zákazníkovi',
         'status' => 'Stav',
     ],
 
@@ -20,7 +24,7 @@ return [
         'booked_count' => 'Obsazeno',
         'status' => 'Stav',
         'user' => 'Uživatel',
-        'customer' => 'Zákazník',
+        'customers' => 'Zákazníci',
         'guest_name' => 'Jméno hosta',
         'guest_email' => 'E-mail hosta',
         'guest_phone' => 'Telefon hosta',
