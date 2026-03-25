@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Reservations\Schemas;
 
 use App\Enums\ReservationStatus;
+use App\Models\Place;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -34,82 +35,88 @@ class ReservationForm
                                             ->columnSpan(2)
                                             ->schema([
                                                 Section::make(__('filament/reservations.sections.booking_details'))
-                                                    ->columns(2)
                                                     ->schema([
-                                                        Select::make('company_id')
-                                                            ->label(__('filament/reservations.fields.company'))
-                                                            ->relationship('company', 'title')
-                                                            ->required()
-                                                            ->searchable()
-                                                            ->preload(),
-                                                        Select::make('place_id')
-                                                            ->label(__('filament/reservations.fields.place'))
-                                                            ->relationship('place', 'title')
-                                                            ->required()
-                                                            ->searchable()
-                                                            ->preload()
-                                                            ->live(),
-                                                        Select::make('staff_id')
-                                                            ->label(__('filament/reservations.fields.staff'))
-                                                            ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
-                                                            ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
-                                                            ->searchable()
-                                                            ->preload(),
-                                                        DateTimePicker::make('from_time')
-                                                            ->label(__('filament/reservations.fields.from_time'))
-                                                            ->required()
-                                                            ->minutesStep(5)
-                                                            ->seconds(false),
-                                                        DateTimePicker::make('to_time')
-                                                            ->label(__('filament/reservations.fields.to_time'))
-                                                            ->required()
-                                                            ->minutesStep(5)
-                                                            ->seconds(false),
-                                                        TextInput::make('capacity')
-                                                            ->label(__('filament/reservations.fields.capacity'))
-                                                            ->numeric()
-                                                            ->minValue(0)
-                                                            ->live()
-                                                            ->default(1),
-                                                        TextInput::make('booked_count')
-                                                            ->label(__('filament/reservations.fields.booked_count'))
-                                                            ->numeric()
-                                                            ->minValue(0)
-                                                            ->maxValue(fn (Get $get) => $get('capacity'))
-                                                            ->default(0),
-                                                    ]),
-                                                Section::make(__('filament/reservations.sections.guest_information'))
-                                                    ->columns(2)
-                                                    ->schema([
-                                                        Select::make('user_id')
-                                                            ->label(__('filament/reservations.fields.user'))
-                                                            ->relationship('user', 'name')
-                                                            ->searchable()
-                                                            ->preload(),
-                                                        Select::make('customer_id')
-                                                            ->label(__('filament/reservations.fields.customer'))
-                                                            ->relationship(
-                                                                'customer',
-                                                                'email',
-                                                                fn ($query) => $query->orderBy('last_name')->orderBy('first_name'),
-                                                            )
-                                                            ->getOptionLabelFromRecordUsing(
-                                                                fn ($record) => "{$record->first_name} {$record->last_name} ({$record->email})",
-                                                            )
-                                                            ->searchable(['first_name', 'last_name', 'email'])
-                                                            ->preload(),
-                                                        TextInput::make('guest_name')
-                                                            ->label(__('filament/reservations.fields.guest_name')),
-                                                        TextInput::make('guest_email')
-                                                            ->label(__('filament/reservations.fields.guest_email'))
-                                                            ->email(),
-                                                        TextInput::make('guest_phone')
-                                                            ->label(__('filament/reservations.fields.guest_phone'))
-                                                            ->tel(),
-                                                        Textarea::make('notes')
-                                                            ->label(__('filament/reservations.fields.notes'))
-                                                            ->rows(2)
-                                                            ->columnSpanFull(),
+                                                        Section::make(__('filament/reservations.sections.location_and_staff'))
+                                                            ->schema([
+                                                                Select::make('company_id')
+                                                                    ->label(__('filament/reservations.fields.company'))
+                                                                    ->relationship('company', 'title')
+                                                                    ->required()
+                                                                    ->searchable()
+                                                                    ->preload(),
+                                                                Select::make('place_id')
+                                                                    ->label(__('filament/reservations.fields.place'))
+                                                                    ->relationship('place', 'title')
+                                                                    ->required()
+                                                                    ->searchable()
+                                                                    ->preload()
+                                                                    ->live(),
+                                                                Select::make('staff_id')
+                                                                    ->label(__('filament/reservations.fields.staff'))
+                                                                    ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
+                                                                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
+                                                                    ->searchable()
+                                                                    ->preload(),
+                                                            ])->columns(2),
+                                                        Section::make(__('filament/reservations.sections.time'))
+                                                            ->schema([
+                                                                DateTimePicker::make('from_time')
+                                                                    ->label(__('filament/reservations.fields.from_time'))
+                                                                    ->required()
+                                                                    ->minutesStep(5)
+                                                                    ->seconds(false),
+                                                                DateTimePicker::make('to_time')
+                                                                    ->label(__('filament/reservations.fields.to_time'))
+                                                                    ->required()
+                                                                    ->minutesStep(5)
+                                                                    ->seconds(false),
+                                                            ])->columns(2),
+                                                        Section::make(__('filament/reservations.sections.capacity'))
+                                                            ->schema([
+                                                                TextInput::make('capacity')
+                                                                    ->label(__('filament/reservations.fields.capacity'))
+                                                                    ->numeric()
+                                                                    ->minValue(0)
+                                                                    ->maxValue(function (Get $get): ?int {
+                                                                        $placeId = $get('place_id');
+                                                                        if (! $placeId) {
+                                                                            return null;
+                                                                        }
+
+                                                                        return Place::query()->find($placeId)?->capacity;
+                                                                    })
+                                                                    ->placeholder(function (Get $get): ?string {
+                                                                        $placeId = $get('place_id');
+                                                                        if (! $placeId) {
+                                                                            return null;
+                                                                        }
+
+                                                                        return 'Max: '.Place::query()->find($placeId)?->capacity;
+                                                                    })
+                                                                    ->live(),
+                                                                TextInput::make('booked_count')
+                                                                    ->label(__('filament/reservations.fields.booked_count'))
+                                                                    ->numeric()
+                                                                    ->minValue(0)
+                                                                    ->maxValue(fn (Get $get) => $get('capacity'))
+                                                                    ->default(0),
+                                                            ])->columns(2),
+                                                        Section::make(__('filament/reservations.sections.customer_information'))
+                                                            ->schema([
+                                                                Select::make('customers')
+                                                                    ->label(__('filament/reservations.fields.customers'))
+                                                                    ->relationship(
+                                                                        'customers',
+                                                                        'email',
+                                                                        fn ($query) => $query->orderBy('last_name')->orderBy('first_name'),
+                                                                    )
+                                                                    ->multiple()
+                                                                    ->getOptionLabelFromRecordUsing(
+                                                                        fn ($record) => "{$record->first_name} {$record->last_name} ({$record->email})",
+                                                                    )
+                                                                    ->searchable(['first_name', 'last_name', 'email'])
+                                                                    ->preload(),
+                                                            ]),
                                                     ]),
                                             ]),
                                         Grid::make(1)
