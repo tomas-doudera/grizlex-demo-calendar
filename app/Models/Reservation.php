@@ -7,6 +7,7 @@ use Database\Factories\ReservationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Reservation extends Model
@@ -18,7 +19,6 @@ class Reservation extends Model
         'company_id',
         'place_id',
         'user_id',
-        'customer_id',
         'staff_id',
         'service_id',
         'from_time',
@@ -63,9 +63,9 @@ class Reservation extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function customer(): BelongsTo
+    public function customers(): BelongsToMany
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsToMany(Customer::class)->withTimestamps();
     }
 
     public function staff(): BelongsTo

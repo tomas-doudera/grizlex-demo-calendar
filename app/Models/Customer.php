@@ -5,7 +5,7 @@ namespace App\Models;
 use Database\Factories\CustomerFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Customer extends Model
 {
@@ -46,9 +46,9 @@ class Customer extends Model
         return CustomerFactory::new();
     }
 
-    public function reservations(): HasMany
+    public function reservations(): BelongsToMany
     {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsToMany(Reservation::class)->withTimestamps();
     }
 
     public function getFullNameAttribute(): string

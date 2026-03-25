@@ -4,6 +4,7 @@ use App\Filament\Resources\Reservations\Pages\CreateReservation;
 use App\Filament\Resources\Reservations\Pages\EditReservation;
 use App\Filament\Resources\Reservations\Pages\ListReservations;
 use App\Models\Company;
+use App\Models\Customer;
 use App\Models\Place;
 use App\Models\Reservation;
 use App\Models\User;
@@ -48,12 +49,34 @@ it('can create a reservation', function () {
             'from_time' => now()->addDay()->setHour(10)->setMinute(0),
             'to_time' => now()->addDay()->setHour(11)->setMinute(0),
             'status' => 'pending',
-            'guest_name' => 'John Doe',
         ])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    expect(Reservation::query()->where('guest_name', 'John Doe')->exists())->toBeTrue();
+    expect(Reservation::query()->exists())->toBeTrue();
+});
+
+it('syncs multiple customers when creating a reservation', function () {
+    $company = Company::factory()->create();
+    $place = Place::factory()->create(['company_id' => $company->id]);
+    $customers = Customer::factory()->count(2)->create();
+
+    Livewire::test(CreateReservation::class)
+        ->fillForm([
+            'company_id' => $company->id,
+            'place_id' => $place->id,
+            'from_time' => now()->addDay()->setHour(10)->setMinute(0),
+            'to_time' => now()->addDay()->setHour(11)->setMinute(0),
+            'status' => 'pending',
+            'customers' => $customers->pluck('id')->all(),
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $reservation = Reservation::query()->latest('id')->first();
+
+    expect($reservation)->not->toBeNull()
+        ->and($reservation->customers()->count())->toBe(2);
 });
 
 it('can update a reservation', function () {
@@ -63,17 +86,19 @@ it('can update a reservation', function () {
         'company_id' => $company->id,
         'place_id' => $place->id,
         'staff_id' => null,
+        'capacity' => 10,
+        'booked_count' => 0,
     ]);
 
     Livewire::test(EditReservation::class, ['record' => $reservation->getRouteKey()])
         ->fillForm([
-            'guest_name' => 'Jane Doe',
+            'booked_count' => 4,
         ])
         ->call('save')
         ->assertHasNoFormErrors();
 
     assertDatabaseHas('reservations', [
         'id' => $reservation->id,
-        'guest_name' => 'Jane Doe',
+        'booked_count' => 4,
     ]);
 });

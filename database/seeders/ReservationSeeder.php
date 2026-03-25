@@ -18,15 +18,23 @@ class ReservationSeeder extends Seeder
         foreach ($places as $place) {
             $staffIds = Staff::where('company_id', $place->company_id)->pluck('id');
 
-            Reservation::factory()
+            $reservations = Reservation::factory()
                 ->count(3)
                 ->create([
                     'company_id' => $place->company_id,
                     'place_id' => $place->id,
                     'staff_id' => $staffIds->random(),
                     'service_id' => Service::where('company_id', $place->company_id)->pluck('id')->random(),
-                    'customer_id' => Customer::query()->inRandomOrder()->value('id'),
                 ]);
+
+            foreach ($reservations as $reservation) {
+                $customerIds = Customer::query()
+                    ->inRandomOrder()
+                    ->limit(fake()->numberBetween(1, 2))
+                    ->pluck('id');
+
+                $reservation->customers()->attach($customerIds);
+            }
         }
     }
 }
