@@ -13,7 +13,6 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
@@ -207,13 +206,29 @@ class CalendarWidget extends CalMeWidget
                         ->label(__('filament/calendar.form.capacity'))
                         ->numeric()
                         ->minValue(0)
-                        ->maxValue(30)
+                        ->maxValue(function (Get $get): ?int {
+                            $placeId = $get('place_id');
+                            if (! $placeId) {
+                                return null;
+                            }
+
+                            return Place::query()->find($placeId)?->capacity;
+                        })
+                        ->placeholder(function (Get $get): ?string {
+                            $placeId = $get('place_id');
+                            if (! $placeId) {
+                                return null;
+                            }
+
+                            return 'Max: '.Place::query()->find($placeId)?->capacity;
+                        })
                         ->nullable(),
                     TextInput::make('booked_count')
                         ->label(__('filament/calendar.form.booked_count'))
                         ->numeric()
                         ->minValue(0)
                         ->maxValue(fn (Get $get) => $get('capacity'))
+                        ->default(0)
                         ->nullable(),
                     ToggleButtons::make('status')
                         ->label(__('filament/calendar.form.status'))
@@ -222,21 +237,22 @@ class CalendarWidget extends CalMeWidget
                         ->inline()
                         ->columnSpanFull(),
                 ])->columns(2),
-            Fieldset::make(__('filament/calendar.form.guest_section'))
+            Fieldset::make(__('filament/calendar.form.customer_section'))
                 ->schema([
-                    TextInput::make('guest_name')
-                        ->label(__('filament/calendar.form.guest_name')),
-                    TextInput::make('guest_email')
-                        ->label(__('filament/calendar.form.guest_email'))
-                        ->email(),
-                    TextInput::make('guest_phone')
-                        ->label(__('filament/calendar.form.guest_phone'))
-                        ->tel(),
-                    Textarea::make('notes')
-                        ->label(__('filament/calendar.form.notes'))
-                        ->rows(2)
-                        ->columnSpanFull(),
-                ])->columns(3),
+                    Select::make('customers')
+                        ->label(__('filament/calendar.form.customers'))
+                        ->relationship(
+                            'customers',
+                            'email',
+                            fn ($query) => $query->orderBy('last_name')->orderBy('first_name'),
+                        )
+                        ->multiple()
+                        ->getOptionLabelFromRecordUsing(
+                            fn ($record) => "{$record->first_name} {$record->last_name} ({$record->email})",
+                        )
+                        ->searchable(['first_name', 'last_name', 'email'])
+                        ->preload(),
+                ])->columns(2),
         ];
     }
 
