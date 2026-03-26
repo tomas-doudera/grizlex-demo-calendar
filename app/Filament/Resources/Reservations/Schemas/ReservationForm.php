@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Reservations\Schemas;
 
 use App\Enums\ReservationStatus;
-use App\Models\Place;
+use App\Models\Venue;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -43,10 +43,24 @@ class ReservationForm
                                                                     ->relationship('company', 'title')
                                                                     ->required()
                                                                     ->searchable()
-                                                                    ->preload(),
-                                                                Select::make('place_id')
-                                                                    ->label(__('filament/reservations.fields.place'))
-                                                                    ->relationship('place', 'title')
+                                                                    ->preload()
+                                                                    ->live(),
+                                                                Select::make('venue_id')
+                                                                    ->label(__('filament/reservations.fields.venue'))
+                                                                    ->options(function (Get $get) {
+                                                                        $companyId = $get('company_id');
+                                                                        if (! $companyId) {
+                                                                            return [];
+                                                                        }
+
+                                                                        return Venue::query()
+                                                                            ->with('place')
+                                                                            ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                                                                            ->orderBy('sort_order')
+                                                                            ->orderBy('title')
+                                                                            ->get()
+                                                                            ->mapWithKeys(fn (Venue $v) => [$v->id => $v->place->title.' – '.$v->title]);
+                                                                    })
                                                                     ->required()
                                                                     ->searchable()
                                                                     ->preload()
@@ -78,20 +92,22 @@ class ReservationForm
                                                                     ->numeric()
                                                                     ->minValue(0)
                                                                     ->maxValue(function (Get $get): ?int {
-                                                                        $placeId = $get('place_id');
-                                                                        if (! $placeId) {
+                                                                        $venueId = $get('venue_id');
+                                                                        if (! $venueId) {
                                                                             return null;
                                                                         }
 
-                                                                        return Place::query()->find($placeId)?->capacity;
+                                                                        return Venue::query()->find($venueId)?->capacity;
                                                                     })
                                                                     ->placeholder(function (Get $get): ?string {
-                                                                        $placeId = $get('place_id');
-                                                                        if (! $placeId) {
+                                                                        $venueId = $get('venue_id');
+                                                                        if (! $venueId) {
                                                                             return null;
                                                                         }
 
-                                                                        return 'Max: '.Place::query()->find($placeId)?->capacity;
+                                                                        $cap = Venue::query()->find($venueId)?->capacity;
+
+                                                                        return $cap !== null ? 'Max: '.$cap : null;
                                                                     })
                                                                     ->live(),
                                                                 TextInput::make('booked_count')

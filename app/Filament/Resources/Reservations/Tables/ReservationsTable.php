@@ -24,8 +24,9 @@ class ReservationsTable
                     ->dateTime('M j, Y H:i')
                     ->sortable()
                     ->description(fn ($record): string => $record->to_time ? 'to '.$record->to_time->format('H:i') : ''),
-                TextColumn::make('place.title')
-                    ->label(__('filament/reservations.columns.place'))
+                TextColumn::make('venue.title')
+                    ->label(__('filament/reservations.columns.venue'))
+                    ->description(fn ($record): ?string => $record->venue?->place?->title)
                     ->sortable(),
                 TextColumn::make('status')
                     ->label(__('filament/reservations.fields.status'))
@@ -62,9 +63,9 @@ class ReservationsTable
                     ->label(__('filament/reservations.filters.company'))
                     ->relationship('company', 'title')
                     ->preload(),
-                SelectFilter::make('place')
-                    ->label(__('filament/reservations.filters.place'))
-                    ->relationship('place', 'title')
+                SelectFilter::make('venue')
+                    ->label(__('filament/reservations.filters.venue'))
+                    ->relationship('venue', 'title')
                     ->searchable()
                     ->preload(),
                 TrashedFilter::make(),

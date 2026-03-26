@@ -15,9 +15,21 @@ class Reservation extends Model
     /** @use HasFactory<ReservationFactory> */
     use HasFactory, SoftDeletes;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Reservation $reservation): void {
+            if ($reservation->venue_id !== null && $reservation->company_id === null) {
+                $reservation->company_id = Venue::query()
+                    ->find($reservation->venue_id)
+                    ?->place
+                    ?->company_id;
+            }
+        });
+    }
+
     protected $fillable = [
         'company_id',
-        'place_id',
+        'venue_id',
         'user_id',
         'staff_id',
         'service_id',
@@ -53,9 +65,9 @@ class Reservation extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function place(): BelongsTo
+    public function venue(): BelongsTo
     {
-        return $this->belongsTo(Place::class);
+        return $this->belongsTo(Venue::class);
     }
 
     public function user(): BelongsTo
@@ -89,7 +101,7 @@ class Reservation extends Model
 
     public function getColorAttribute(): ?string
     {
-        return $this->place?->color;
+        return $this->venue?->color;
     }
 
     public function getStyleAttribute(): ?string
@@ -101,6 +113,6 @@ class Reservation extends Model
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->place?->image_url;
+        return $this->venue?->image_url;
     }
 }

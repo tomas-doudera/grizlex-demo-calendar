@@ -2,9 +2,9 @@
 
 use App\Enums\ReservationStatus;
 use App\Models\Company;
-use App\Models\Place;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Venue;
 use Carbon\CarbonImmutable;
 
 it('can be created with factory', function () {
@@ -20,10 +20,10 @@ it('belongs to a company', function () {
     expect($reservation->company)->toBeInstanceOf(Company::class);
 });
 
-it('belongs to a place', function () {
+it('belongs to a venue', function () {
     $reservation = Reservation::factory()->create();
 
-    expect($reservation->place)->toBeInstanceOf(Place::class);
+    expect($reservation->venue)->toBeInstanceOf(Venue::class);
 });
 
 it('can belong to a user', function () {

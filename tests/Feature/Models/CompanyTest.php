@@ -3,6 +3,7 @@
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Models\Venue;
 
 it('can be created with factory', function () {
     $company = Company::factory()->create();
@@ -28,9 +29,10 @@ it('has places relationship', function () {
 it('has reservations relationship', function () {
     $company = Company::factory()->create();
     $place = Place::factory()->create(['company_id' => $company->id]);
+    $venue = Venue::factory()->create(['place_id' => $place->id]);
     Reservation::factory()->count(2)->create([
         'company_id' => $company->id,
-        'place_id' => $place->id,
+        'venue_id' => $venue->id,
     ]);
 
     expect($company->reservations)->toHaveCount(2);

@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\VenueFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Venue extends Model
+{
+    /** @use HasFactory<VenueFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'place_id',
+        'title',
+        'short_title',
+        'description',
+        'type',
+        'capacity',
+        'color',
+        'image_url',
+        'is_active',
+        'sort_order',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+            'capacity' => 'integer',
+            'sort_order' => 'integer',
+        ];
+    }
+
+    public function place(): BelongsTo
+    {
+        return $this->belongsTo(Place::class);
+    }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(Reservation::class);
+    }
+}

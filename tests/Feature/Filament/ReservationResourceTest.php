@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Place;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\Venue;
 use Livewire\Livewire;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -41,11 +42,12 @@ it('can list reservations', function () {
 it('can create a reservation', function () {
     $company = Company::factory()->create();
     $place = Place::factory()->create(['company_id' => $company->id]);
+    $venue = Venue::factory()->create(['place_id' => $place->id]);
 
     Livewire::test(CreateReservation::class)
         ->fillForm([
             'company_id' => $company->id,
-            'place_id' => $place->id,
+            'venue_id' => $venue->id,
             'from_time' => now()->addDay()->setHour(10)->setMinute(0),
             'to_time' => now()->addDay()->setHour(11)->setMinute(0),
             'status' => 'pending',
@@ -59,12 +61,13 @@ it('can create a reservation', function () {
 it('syncs multiple customers when creating a reservation', function () {
     $company = Company::factory()->create();
     $place = Place::factory()->create(['company_id' => $company->id]);
+    $venue = Venue::factory()->create(['place_id' => $place->id]);
     $customers = Customer::factory()->count(2)->create();
 
     Livewire::test(CreateReservation::class)
         ->fillForm([
             'company_id' => $company->id,
-            'place_id' => $place->id,
+            'venue_id' => $venue->id,
             'from_time' => now()->addDay()->setHour(10)->setMinute(0),
             'to_time' => now()->addDay()->setHour(11)->setMinute(0),
             'status' => 'pending',
@@ -83,11 +86,14 @@ it('can update a reservation', function () {
     $company = Company::factory()->create();
     $place = Place::factory()->create([
         'company_id' => $company->id,
+    ]);
+    $venue = Venue::factory()->create([
+        'place_id' => $place->id,
         'capacity' => 30,
     ]);
     $reservation = Reservation::factory()->create([
         'company_id' => $company->id,
-        'place_id' => $place->id,
+        'venue_id' => $venue->id,
         'staff_id' => null,
         'capacity' => 10,
         'booked_count' => 0,

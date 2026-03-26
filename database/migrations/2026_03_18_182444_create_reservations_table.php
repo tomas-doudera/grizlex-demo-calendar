@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('place_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('venue_id')->constrained()->cascadeOnDelete();
             $table->foreignId('staff_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('service_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['place_id', 'from_time', 'to_time']);
+            $table->index(['venue_id', 'from_time', 'to_time']);
         });
     }
 

@@ -16,7 +16,7 @@ return [
 
     'fields' => [
         'company' => 'Firma',
-        'place' => 'Místo',
+        'venue' => 'Prostor',
         'staff' => 'Trenér',
         'from_time' => 'Od',
         'to_time' => 'Do',
@@ -36,7 +36,7 @@ return [
 
     'columns' => [
         'date_time' => 'Datum a čas',
-        'place' => 'Místo',
+        'venue' => 'Prostor',
         'guest' => 'Host',
         'booked' => 'Obsazeno',
         'company' => 'Firma',
@@ -46,6 +46,6 @@ return [
     'filters' => [
         'status' => 'Stav',
         'company' => 'Firma',
-        'place' => 'Místo',
+        'venue' => 'Prostor',
     ],
 ];

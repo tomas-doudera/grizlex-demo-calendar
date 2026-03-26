@@ -1,15 +1,19 @@
 <?php
 
 return [
+    'title_all_places' => 'Všechna místa',
+
     'filters' => [
         'date' => 'Datum',
         'company' => 'Společnost',
+        'place' => 'Místo',
         'places' => 'Místa',
+        'venues' => 'Prostory',
     ],
     'form' => [
         'booking_details' => 'Detaily rezervace',
         'company' => 'Společnost',
-        'place' => 'Místo',
+        'venue' => 'Prostor',
         'time' => 'Čas',
         'start' => 'Začátek',
         'end' => 'Konec',

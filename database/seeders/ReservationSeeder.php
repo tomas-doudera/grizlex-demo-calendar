@@ -3,28 +3,29 @@
 namespace Database\Seeders;
 
 use App\Models\Customer;
-use App\Models\Place;
 use App\Models\Reservation;
 use App\Models\Service;
 use App\Models\Staff;
+use App\Models\Venue;
 use Illuminate\Database\Seeder;
 
 class ReservationSeeder extends Seeder
 {
     public function run(): void
     {
-        $places = Place::with('company')->get();
+        $venues = Venue::with('place')->get();
 
-        foreach ($places as $place) {
-            $staffIds = Staff::where('company_id', $place->company_id)->pluck('id');
+        foreach ($venues as $venue) {
+            $companyId = $venue->place->company_id;
+            $staffIds = Staff::where('company_id', $companyId)->pluck('id');
 
             $reservations = Reservation::factory()
                 ->count(3)
                 ->create([
-                    'company_id' => $place->company_id,
-                    'place_id' => $place->id,
+                    'company_id' => $companyId,
+                    'venue_id' => $venue->id,
                     'staff_id' => $staffIds->random(),
-                    'service_id' => Service::where('company_id', $place->company_id)->pluck('id')->random(),
+                    'service_id' => Service::where('company_id', $companyId)->pluck('id')->random(),
                 ]);
 
             foreach ($reservations as $reservation) {

@@ -6,6 +6,7 @@ use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Company extends Model
 {
@@ -40,6 +41,14 @@ class Company extends Model
     public function places(): HasMany
     {
         return $this->hasMany(Place::class);
+    }
+
+    /**
+     * @return HasManyThrough<Venue, Place>
+     */
+    public function venues(): HasManyThrough
+    {
+        return $this->hasManyThrough(Venue::class, Place::class);
     }
 
     public function reservations(): HasMany

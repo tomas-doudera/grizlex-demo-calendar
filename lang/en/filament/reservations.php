@@ -16,7 +16,7 @@ return [
 
     'fields' => [
         'company' => 'Company',
-        'place' => 'Place',
+        'venue' => 'Venue',
         'staff' => 'Trainer',
         'from_time' => 'From',
         'to_time' => 'To',
@@ -36,7 +36,7 @@ return [
 
     'columns' => [
         'date_time' => 'Date & Time',
-        'place' => 'Place',
+        'venue' => 'Venue',
         'guest' => 'Guest',
         'booked' => 'Booked',
         'company' => 'Company',
@@ -46,6 +46,6 @@ return [
     'filters' => [
         'status' => 'Status',
         'company' => 'Company',
-        'place' => 'Place',
+        'venue' => 'Venue',
     ],
 ];

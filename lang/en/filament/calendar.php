@@ -1,15 +1,19 @@
 <?php
 
 return [
+    'title_all_places' => 'All places',
+
     'filters' => [
         'date' => 'Date',
         'company' => 'Company',
+        'place' => 'Place',
         'places' => 'Places',
+        'venues' => 'Venues',
     ],
     'form' => [
         'booking_details' => 'Booking Details',
         'company' => 'Company',
-        'place' => 'Place',
+        'venue' => 'Venue',
         'time' => 'Time',
         'start' => 'Start',
         'end' => 'End',
