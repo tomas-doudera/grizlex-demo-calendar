@@ -39,6 +39,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.calendars')),
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.management')),
                 NavigationGroup::make(fn (): string => __('filament/navigation.groups.crm')),
+                NavigationGroup::make(fn (): string => __('filament/navigation.groups.settings')),
             ])
             ->plugin(CalMePlugin::make())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

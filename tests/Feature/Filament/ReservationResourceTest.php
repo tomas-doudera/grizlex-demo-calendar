@@ -81,7 +81,10 @@ it('syncs multiple customers when creating a reservation', function () {
 
 it('can update a reservation', function () {
     $company = Company::factory()->create();
-    $place = Place::factory()->create(['company_id' => $company->id]);
+    $place = Place::factory()->create([
+        'company_id' => $company->id,
+        'capacity' => 30,
+    ]);
     $reservation = Reservation::factory()->create([
         'company_id' => $company->id,
         'place_id' => $place->id,

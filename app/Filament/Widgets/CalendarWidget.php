@@ -6,6 +6,7 @@ use App\Enums\ReservationStatus;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Settings\CalendarSettings;
 use Carbon\CarbonInterface;
 use Closure;
 use Filament\Actions\Action;
@@ -134,6 +135,26 @@ class CalendarWidget extends CalMeWidget
                                 ->minutesStep(5)
                                 ->live()
                                 ->required()
+                                ->rules([
+                                    function () {
+                                        return function (string $attribute, $value, Closure $fail): void {
+                                            $time = Carbon::parse($value);
+                                            $dayOfWeek = $time->format('l');
+                                            $openingHours = $this->getOpeningHours();
+                                            $hours = $openingHours[$dayOfWeek] ?? null;
+
+                                            if (! $hours || $hours['max'] === 0) {
+                                                $fail(__('filament/calendar.validation.venue_closed', ['day' => $dayOfWeek]));
+
+                                                return;
+                                            }
+
+                                            if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
+                                                $fail(__('filament/calendar.validation.time_range', ['min' => $hours['min'], 'max' => $hours['max']]));
+                                            }
+                                        };
+                                    },
+                                ])
                                 ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old): void {
                                     $this->recalculateToTime($get, $set, Carbon::parse($old ?? $state));
                                 }),
@@ -147,7 +168,7 @@ class CalendarWidget extends CalMeWidget
                                 ->required()
                                 ->rules([
                                     function () {
-                                        return function (string $attribute, $value, Closure $fail) {
+                                        return function (string $attribute, $value, Closure $fail): void {
                                             $time = Carbon::parse($value);
                                             $dayOfWeek = $time->format('l');
                                             $openingHours = $this->getOpeningHours();
@@ -258,7 +279,7 @@ class CalendarWidget extends CalMeWidget
 
     protected function getTitle(): ?string
     {
-        return __(($this->getCompanyTitle()));
+        return $this->getCompanyTitle();
     }
 
     protected function getCompanyTitle(): ?string
@@ -384,6 +405,46 @@ class CalendarWidget extends CalMeWidget
     protected function getPollingInterval(): ?string
     {
         return '30s';
+    }
+
+    /**
+     * Interim: full-day window until opening hours are loaded per Place (or Company).
+     *
+     * @return array<string, array{min: int, max: int}>
+     */
+    #[Computed]
+    protected function getOpeningHours(): array
+    {
+        return once(function (): array {
+            $day = ['min' => 0, 'max' => 24];
+
+            return [
+                'Monday' => $day,
+                'Tuesday' => $day,
+                'Wednesday' => $day,
+                'Thursday' => $day,
+                'Friday' => $day,
+                'Saturday' => $day,
+                'Sunday' => $day,
+            ];
+        });
+    }
+
+    protected function getWidgetCellDimensions(string $view): array
+    {
+        $base = $this->cellDimensions[$view] ?? [];
+
+        if ($view !== 'week-vertical') {
+            return $base;
+        }
+
+        $settings = app(CalendarSettings::class);
+
+        return [
+            ...$base,
+            'cell_width' => $settings->step_width * 4,
+            'cell_height' => $settings->row_height,
+        ];
     }
 
     protected function getEventModel(): string
