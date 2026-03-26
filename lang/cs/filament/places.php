@@ -1,51 +1,57 @@
 <?php
 
 return [
-    'label' => 'Místo',
-    'plural_label' => 'Místa',
+    'label' => 'Pobočka',
+    'plural_label' => 'Pobočky',
+
+    'tabs' => [
+        'general' => 'Obecné',
+        'opening_hours' => 'Otevírací hodiny',
+    ],
 
     'sections' => [
-        'details' => 'Detaily místa',
-        'booking_settings' => 'Nastavení rezervací',
+        'details' => 'Údaje o pobočce',
+        'contact' => 'Kontakt a adresa',
+        'opening_hours' => 'Týdenní rozvrh',
+        'opening_hours_description' => 'Kalendář podle toho povolí časy rezervací. Prázdný den znamená zavřeno.',
+    ],
+
+    'opening_hours_placeholder' => 'např. 09:00-12:00, 13:00-17:00',
+
+    'days' => [
+        'monday' => 'Pondělí',
+        'tuesday' => 'Úterý',
+        'wednesday' => 'Středa',
+        'thursday' => 'Čtvrtek',
+        'friday' => 'Pátek',
+        'saturday' => 'Sobota',
+        'sunday' => 'Neděle',
     ],
 
     'fields' => [
-        'title' => 'Název místa',
-        'short_title' => 'Zkratka',
+        'title' => 'Název pobočky',
         'company' => 'Firma',
-        'type' => 'Typ',
-        'capacity' => 'Kapacita',
-        'color' => 'Barva',
-        'image_url' => 'URL obrázku',
+        'email' => 'E-mail',
+        'phone' => 'Telefon',
+        'address' => 'Adresa',
+        'city' => 'Město',
+        'postal_code' => 'PSČ',
+        'country' => 'Země',
         'description' => 'Popis',
         'is_active' => 'Aktivní',
-        'min_booking_minutes' => 'Min. rezervace',
-        'max_booking_minutes' => 'Max. rezervace',
-        'booking_interval_minutes' => 'Interval rezervací',
-        'advance_booking_days' => 'Rezervace předem',
-        'cancellation_hours' => 'Lhůta pro zrušení',
     ],
 
     'columns' => [
-        'title' => 'Místo',
+        'title' => 'Pobočka',
         'company' => 'Firma',
+        'city' => 'Město',
+        'venues' => 'Prostory',
         'active' => 'Aktivní',
-        'reservations' => 'Rezervace',
     ],
 
     'filters' => [
         'company' => 'Firma',
-        'type' => 'Typ',
         'is_active' => 'Aktivní',
-    ],
-
-    'types' => [
-        'room' => 'Místnost',
-        'court' => 'Kurt',
-        'zone' => 'Zóna',
-        'studio' => 'Studio',
-        'field' => 'Hřiště',
-        'pool' => 'Bazén',
     ],
 
     'suffixes' => [

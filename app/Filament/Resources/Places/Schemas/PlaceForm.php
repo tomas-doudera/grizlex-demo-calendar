@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Places\Schemas;
 
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -23,7 +22,7 @@ class PlaceForm
             ->components([
                 Tabs::make('Tabs')
                     ->tabs([
-                        Tab::make('General')
+                        Tab::make(__('filament/places.tabs.general'))
                             ->icon(Heroicon::OutlinedInformationCircle)
                             ->schema([
                                 Grid::make(2)
@@ -35,36 +34,12 @@ class PlaceForm
                                                     ->label(__('filament/places.fields.title'))
                                                     ->required()
                                                     ->maxLength(255),
-                                                TextInput::make('short_title')
-                                                    ->label(__('filament/places.fields.short_title'))
-                                                    ->maxLength(10),
                                                 Select::make('company_id')
                                                     ->label(__('filament/places.fields.company'))
                                                     ->relationship('company', 'title')
                                                     ->required()
                                                     ->searchable()
                                                     ->preload(),
-                                                Select::make('type')
-                                                    ->label(__('filament/places.fields.type'))
-                                                    ->options([
-                                                        'room' => __('filament/places.types.room'),
-                                                        'court' => __('filament/places.types.court'),
-                                                        'zone' => __('filament/places.types.zone'),
-                                                        'studio' => __('filament/places.types.studio'),
-                                                        'field' => __('filament/places.types.field'),
-                                                        'pool' => __('filament/places.types.pool'),
-                                                    ]),
-                                                TextInput::make('capacity')
-                                                    ->label(__('filament/places.fields.capacity'))
-                                                    ->numeric()
-                                                    ->default(1)
-                                                    ->minValue(1),
-                                                ColorPicker::make('color')
-                                                    ->label(__('filament/places.fields.color')),
-                                                TextInput::make('image_url')
-                                                    ->label(__('filament/places.fields.image_url'))
-                                                    ->url()
-                                                    ->columnSpanFull(),
                                                 Textarea::make('description')
                                                     ->label(__('filament/places.fields.description'))
                                                     ->rows(2)
@@ -73,36 +48,68 @@ class PlaceForm
                                                     ->label(__('filament/places.fields.is_active'))
                                                     ->default(true),
                                             ]),
-                                        Section::make(__('filament/places.sections.booking_settings'))
-                                            ->columns(3)
-                                            ->collapsed()
+                                        Section::make(__('filament/places.sections.contact'))
+                                            ->columns(2)
                                             ->schema([
-                                                TextInput::make('min_booking_minutes')
-                                                    ->label(__('filament/places.fields.min_booking_minutes'))
-                                                    ->numeric()
-                                                    ->default(30)
-                                                    ->suffix('min'),
-                                                TextInput::make('max_booking_minutes')
-                                                    ->label(__('filament/places.fields.max_booking_minutes'))
-                                                    ->numeric()
-                                                    ->default(120)
-                                                    ->suffix('min'),
-                                                TextInput::make('booking_interval_minutes')
-                                                    ->label(__('filament/places.fields.booking_interval_minutes'))
-                                                    ->numeric()
-                                                    ->default(15)
-                                                    ->suffix('min'),
-                                                TextInput::make('advance_booking_days')
-                                                    ->label(__('filament/places.fields.advance_booking_days'))
-                                                    ->numeric()
-                                                    ->default(30)
-                                                    ->suffix(__('filament/places.suffixes.days')),
-                                                TextInput::make('cancellation_hours')
-                                                    ->label(__('filament/places.fields.cancellation_hours'))
-                                                    ->numeric()
-                                                    ->default(24)
-                                                    ->suffix(__('filament/places.suffixes.hours')),
+                                                TextInput::make('email')
+                                                    ->label(__('filament/places.fields.email'))
+                                                    ->email()
+                                                    ->maxLength(255),
+                                                TextInput::make('phone')
+                                                    ->label(__('filament/places.fields.phone'))
+                                                    ->tel()
+                                                    ->maxLength(255),
+                                                TextInput::make('address')
+                                                    ->label(__('filament/places.fields.address'))
+                                                    ->maxLength(255)
+                                                    ->columnSpanFull(),
+                                                TextInput::make('city')
+                                                    ->label(__('filament/places.fields.city'))
+                                                    ->maxLength(255),
+                                                TextInput::make('postal_code')
+                                                    ->label(__('filament/places.fields.postal_code'))
+                                                    ->maxLength(255),
+                                                TextInput::make('country')
+                                                    ->label(__('filament/places.fields.country'))
+                                                    ->maxLength(255),
                                             ]),
+                                    ]),
+                            ]),
+                        Tab::make(__('filament/places.tabs.opening_hours'))
+                            ->icon(Heroicon::OutlinedClock)
+                            ->schema([
+                                Section::make(__('filament/places.sections.opening_hours'))
+                                    ->description(__('filament/places.sections.opening_hours_description'))
+                                    ->columns(2)
+                                    ->schema([
+                                        TextInput::make('opening_hours.monday')
+                                            ->label(__('filament/places.days.monday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.tuesday')
+                                            ->label(__('filament/places.days.tuesday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.wednesday')
+                                            ->label(__('filament/places.days.wednesday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.thursday')
+                                            ->label(__('filament/places.days.thursday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.friday')
+                                            ->label(__('filament/places.days.friday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.saturday')
+                                            ->label(__('filament/places.days.saturday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
+                                        TextInput::make('opening_hours.sunday')
+                                            ->label(__('filament/places.days.sunday'))
+                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
+                                            ->maxLength(255),
                                     ]),
                             ]),
                     ]),

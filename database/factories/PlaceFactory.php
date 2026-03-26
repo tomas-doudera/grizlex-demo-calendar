@@ -19,18 +19,24 @@ class PlaceFactory extends Factory
         return [
             'company_id' => Company::factory(),
             'title' => fake()->words(2, true),
-            'short_title' => fake()->lexify('??'),
             'description' => fake()->optional()->sentence(),
-            'type' => fake()->randomElement(['room', 'court', 'zone', 'studio']),
-            'capacity' => fake()->numberBetween(1, 30),
-            'color' => fake()->hexColor(),
+            'email' => fake()->optional()->companyEmail(),
+            'phone' => fake()->optional()->phoneNumber(),
+            'address' => fake()->optional()->streetAddress(),
+            'city' => fake()->optional()->city(),
+            'postal_code' => fake()->optional()->postcode(),
+            'country' => fake()->optional()->countryCode(),
             'is_active' => true,
             'sort_order' => 0,
-            'min_booking_minutes' => 30,
-            'max_booking_minutes' => 120,
-            'booking_interval_minutes' => 15,
-            'advance_booking_days' => 30,
-            'cancellation_hours' => 24,
+            'opening_hours' => [
+                'monday' => '09:00-18:00',
+                'tuesday' => '09:00-18:00',
+                'wednesday' => '09:00-18:00',
+                'thursday' => '09:00-18:00',
+                'friday' => '09:00-18:00',
+                'saturday' => '10:00-14:00',
+                'sunday' => '',
+            ],
         ];
     }
 

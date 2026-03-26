@@ -12,19 +12,16 @@ return new class extends Migration
             $table->id();
             $table->foreignId('company_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('short_title')->nullable();
             $table->text('description')->nullable();
-            $table->string('type')->nullable();
-            $table->unsignedInteger('capacity')->default(1);
-            $table->string('color')->nullable();
-            $table->string('image_url')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('country')->nullable();
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
-            $table->unsignedInteger('min_booking_minutes')->default(30);
-            $table->unsignedInteger('max_booking_minutes')->default(120);
-            $table->unsignedInteger('booking_interval_minutes')->default(15);
-            $table->unsignedInteger('advance_booking_days')->default(30);
-            $table->unsignedInteger('cancellation_hours')->default(24);
+            $table->json('opening_hours')->nullable();
             $table->timestamps();
         });
     }

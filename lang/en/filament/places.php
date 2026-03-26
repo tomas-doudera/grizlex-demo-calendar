@@ -4,48 +4,54 @@ return [
     'label' => 'Place',
     'plural_label' => 'Places',
 
+    'tabs' => [
+        'general' => 'General',
+        'opening_hours' => 'Opening hours',
+    ],
+
     'sections' => [
-        'details' => 'Place Details',
-        'booking_settings' => 'Booking Settings',
+        'details' => 'Place details',
+        'contact' => 'Contact & address',
+        'opening_hours' => 'Weekly schedule',
+        'opening_hours_description' => 'Used by the calendar for allowed booking times. Leave a day empty when closed.',
+    ],
+
+    'opening_hours_placeholder' => 'e.g. 09:00-12:00, 13:00-17:00',
+
+    'days' => [
+        'monday' => 'Monday',
+        'tuesday' => 'Tuesday',
+        'wednesday' => 'Wednesday',
+        'thursday' => 'Thursday',
+        'friday' => 'Friday',
+        'saturday' => 'Saturday',
+        'sunday' => 'Sunday',
     ],
 
     'fields' => [
-        'title' => 'Place Name',
-        'short_title' => 'Short Name',
+        'title' => 'Place name',
         'company' => 'Company',
-        'type' => 'Type',
-        'capacity' => 'Capacity',
-        'color' => 'Color',
-        'image_url' => 'Image URL',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'address' => 'Address',
+        'city' => 'City',
+        'postal_code' => 'Postal code',
+        'country' => 'Country',
         'description' => 'Description',
         'is_active' => 'Active',
-        'min_booking_minutes' => 'Min. Booking',
-        'max_booking_minutes' => 'Max. Booking',
-        'booking_interval_minutes' => 'Booking Interval',
-        'advance_booking_days' => 'Advance Booking',
-        'cancellation_hours' => 'Cancellation Deadline',
     ],
 
     'columns' => [
         'title' => 'Place',
         'company' => 'Company',
+        'city' => 'City',
+        'venues' => 'Venues',
         'active' => 'Active',
-        'reservations' => 'Reservations',
     ],
 
     'filters' => [
         'company' => 'Company',
-        'type' => 'Type',
         'is_active' => 'Active',
-    ],
-
-    'types' => [
-        'room' => 'Room',
-        'court' => 'Court',
-        'zone' => 'Zone',
-        'studio' => 'Studio',
-        'field' => 'Field',
-        'pool' => 'Pool',
     ],
 
     'suffixes' => [
