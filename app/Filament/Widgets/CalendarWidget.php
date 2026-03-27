@@ -58,6 +58,7 @@ class CalendarWidget extends CalMeWidget
                 ->afterStateUpdated(function (Set $set, ?string $state): void {
                     $set('place_id', null);
                     $set('venue_ids', Venue::query()
+                        ->withActivePlace()
                         ->whereHas('place', fn ($q) => $q->where('company_id', $state))
                         ->pluck('id')
                         ->toArray());
@@ -84,6 +85,7 @@ class CalendarWidget extends CalMeWidget
                     $set('place_id', $firstPlace);
 
                     $set('venue_ids', Venue::query()
+                        ->withActivePlace()
                         ->whereHas('place', fn ($q) => $q->where('company_id', $state))
                         ->when(filled($firstPlace), fn ($q) => $q->where('place_id', $firstPlace))
                         ->pluck('id')
@@ -128,6 +130,7 @@ class CalendarWidget extends CalMeWidget
         }
 
         return Venue::query()
+            ->withActivePlace()
             ->join('places', 'venues.place_id', '=', 'places.id')
             ->whereIn('venues.id', $venueIds)
             ->where('places.company_id', $this->getCompanyId())
@@ -484,7 +487,10 @@ class CalendarWidget extends CalMeWidget
             )
             ->whereIn(
                 'venue_id',
-                array_values(array_filter($this->filters['venue_ids'] ?? []))
+                Venue::query()
+                    ->withActivePlace()
+                    ->whereIn('id', array_values(array_filter($this->filters['venue_ids'] ?? [])))
+                    ->pluck('id')
             )
             ->get();
 

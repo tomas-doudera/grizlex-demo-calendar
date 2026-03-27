@@ -34,6 +34,13 @@ class Venue extends Model
             'sort_order' => 'integer',
         ];
     }
+    
+    public function scopeWithActivePlace($query)
+    {
+        return $query
+                ->where('venues.is_active', true)
+                ->whereHas('place', fn ($q) => $q->where('places.is_active', true));
+    }
 
     public function place(): BelongsTo
     {
