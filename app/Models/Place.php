@@ -38,6 +38,15 @@ class Place extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function (Place $place) {
+            if (! $place->is_active) {
+                $place->venues()->update(['is_active' => false]);
+            }
+        });
+    }
+
     /**
      * @return array<string, array{min: int, max: int}>
      */
