@@ -14,19 +14,16 @@ return [
 
     'fields' => [
         'title' => 'Name',
-        'short_title' => 'Short name',
         'place' => 'Place',
         'company' => 'Company',
         'type' => 'Type',
         'capacity' => 'Capacity',
-        'color' => 'Color',
-        'image_url' => 'Image URL',
         'description' => 'Description',
         'is_active' => 'Active',
     ],
 
     'columns' => [
-        'title' => 'Venue',
+        'title' => 'Name',
         'place' => 'Place',
         'company' => 'Company',
         'active' => 'Active',

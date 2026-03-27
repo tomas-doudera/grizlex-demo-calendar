@@ -14,19 +14,16 @@ return [
 
     'fields' => [
         'title' => 'Název',
-        'short_title' => 'Zkratka',
         'place' => 'Pobočka',
         'company' => 'Firma',
         'type' => 'Typ',
         'capacity' => 'Kapacita',
-        'color' => 'Barva',
-        'image_url' => 'URL obrázku',
         'description' => 'Popis',
         'is_active' => 'Aktivní',
     ],
 
     'columns' => [
-        'title' => 'Prostor',
+        'title' => 'Název',
         'place' => 'Pobočka',
         'company' => 'Firma',
         'active' => 'Aktivní',

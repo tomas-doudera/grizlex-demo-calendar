@@ -16,12 +16,9 @@ class Venue extends Model
     protected $fillable = [
         'place_id',
         'title',
-        'short_title',
         'description',
         'type',
         'capacity',
-        'color',
-        'image_url',
         'is_active',
         'sort_order',
     ];
@@ -34,12 +31,12 @@ class Venue extends Model
             'sort_order' => 'integer',
         ];
     }
-    
+
     public function scopeWithActivePlace($query)
     {
         return $query
-                ->where('venues.is_active', true)
-                ->whereHas('place', fn ($q) => $q->where('places.is_active', true));
+            ->where('venues.is_active', true)
+            ->whereHas('place', fn ($q) => $q->where('places.is_active', true));
     }
 
     public function place(): BelongsTo

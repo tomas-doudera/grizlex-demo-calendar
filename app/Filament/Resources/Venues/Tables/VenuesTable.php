@@ -5,9 +5,8 @@ namespace App\Filament\Resources\Venues\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ColorColumn;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -18,14 +17,11 @@ class VenuesTable
     {
         return $table
             ->columns([
-                ColorColumn::make('color')
-                    ->label(''),
                 TextColumn::make('title')
                     ->label(__('filament/venues.columns.title'))
                     ->searchable()
                     ->sortable()
-                    ->weight('medium')
-                    ->description(fn ($record): ?string => $record->short_title),
+                    ->weight('medium'),
                 TextColumn::make('place.title')
                     ->label(__('filament/venues.columns.place'))
                     ->sortable(),
@@ -42,8 +38,7 @@ class VenuesTable
                     ->badge()
                     ->color('info')
                     ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean()
+                ToggleColumn::make('is_active')
                     ->label(__('filament/venues.columns.active')),
             ])
             ->filters([

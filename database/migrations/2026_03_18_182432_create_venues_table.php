@@ -12,12 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('place_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->string('short_title')->nullable();
             $table->text('description')->nullable();
             $table->string('type')->nullable();
             $table->unsignedInteger('capacity')->default(1);
-            $table->string('color')->nullable();
-            $table->string('image_url')->nullable();
             $table->boolean('is_active')->default(true);
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();

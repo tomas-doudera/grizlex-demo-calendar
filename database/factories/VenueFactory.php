@@ -19,12 +19,9 @@ class VenueFactory extends Factory
         return [
             'place_id' => Place::factory(),
             'title' => fake()->words(2, true),
-            'short_title' => fake()->lexify('??'),
             'description' => fake()->optional()->sentence(),
             'type' => fake()->randomElement(['room', 'court', 'zone', 'studio']),
             'capacity' => fake()->numberBetween(1, 30),
-            'color' => fake()->hexColor(),
-            'image_url' => fake()->optional()->url(),
             'is_active' => true,
             'sort_order' => 0,
         ];

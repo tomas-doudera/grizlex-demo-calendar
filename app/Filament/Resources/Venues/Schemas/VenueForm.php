@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Venues\Schemas;
 
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -32,9 +31,6 @@ class VenueForm
                                             ->label(__('filament/venues.fields.title'))
                                             ->required()
                                             ->maxLength(255),
-                                        TextInput::make('short_title')
-                                            ->label(__('filament/venues.fields.short_title'))
-                                            ->maxLength(10),
                                         Select::make('place_id')
                                             ->label(__('filament/venues.fields.place'))
                                             ->relationship('place', 'title')
@@ -56,19 +52,12 @@ class VenueForm
                                             ->numeric()
                                             ->default(1)
                                             ->minValue(1),
-                                        ColorPicker::make('color')
-                                            ->label(__('filament/venues.fields.color')),
-                                        TextInput::make('image_url')
-                                            ->label(__('filament/venues.fields.image_url'))
-                                            ->url()
-                                            ->columnSpanFull(),
                                         Textarea::make('description')
                                             ->label(__('filament/venues.fields.description'))
                                             ->rows(2)
                                             ->columnSpanFull(),
                                         Toggle::make('is_active')
-                                            ->label(__('filament/venues.fields.is_active'))
-                                            ->default(true),
+                                            ->label(__('filament/venues.fields.is_active')),
                                     ]),
                             ]),
                     ]),
