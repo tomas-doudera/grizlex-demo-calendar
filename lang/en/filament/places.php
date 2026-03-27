@@ -13,10 +13,8 @@ return [
         'details' => 'Place details',
         'contact' => 'Contact & address',
         'opening_hours' => 'Weekly schedule',
-        'opening_hours_description' => 'Used by the calendar for allowed booking times. Leave a day empty when closed.',
+        'opening_hours_description' => 'Used by the calendar for allowed booking times. For closed days, set both handles to 0:00, or use the same opening and closing time.',
     ],
-
-    'opening_hours_placeholder' => 'e.g. 09:00-12:00, 13:00-17:00',
 
     'days' => [
         'monday' => 'Monday',
@@ -42,7 +40,7 @@ return [
     ],
 
     'columns' => [
-        'title' => 'Place',
+        'title' => 'Name',
         'company' => 'Company',
         'city' => 'City',
         'venues' => 'Venues',

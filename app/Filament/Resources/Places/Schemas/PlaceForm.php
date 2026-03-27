@@ -3,15 +3,20 @@
 namespace App\Filament\Resources\Places\Schemas;
 
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Slider;
+use Filament\Forms\Components\Slider\Enums\PipsMode;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Support\RawJs;
+use Filament\Forms\Components\Placeholder;
 
 class PlaceForm
 {
@@ -79,40 +84,48 @@ class PlaceForm
                             ->icon(Heroicon::OutlinedClock)
                             ->schema([
                                 Section::make(__('filament/places.sections.opening_hours'))
-                                    ->description(__('filament/places.sections.opening_hours_description'))
-                                    ->columns(2)
-                                    ->schema([
-                                        TextInput::make('opening_hours.monday')
-                                            ->label(__('filament/places.days.monday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.tuesday')
-                                            ->label(__('filament/places.days.tuesday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.wednesday')
-                                            ->label(__('filament/places.days.wednesday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.thursday')
-                                            ->label(__('filament/places.days.thursday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.friday')
-                                            ->label(__('filament/places.days.friday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.saturday')
-                                            ->label(__('filament/places.days.saturday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                        TextInput::make('opening_hours.sunday')
-                                            ->label(__('filament/places.days.sunday'))
-                                            ->placeholder(__('filament/places.opening_hours_placeholder'))
-                                            ->maxLength(255),
-                                    ]),
+                                ->description(__('filament/places.sections.opening_hours_description'))
+                                ->compact()
+                                ->schema([
+                                    ...collect(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
+                                        ->map(fn (string $day) => Grid::make(['default' => 4])
+                                            ->extraAttributes(['class' => '-mb-2 -ml-40'])
+                                            ->schema([
+                                                Placeholder::make('day_' . $day)
+                                                    ->hiddenLabel()
+                                                    ->content(__('filament/places.days.' . $day))
+                                                    ->extraAttributes(['class' => 'flex items-center pt-10 pl-50'])
+                                                    ->columnSpan(1),
+                                                static::getOpeningHoursSchema($day)
+                                                    ->columnSpan(3),
+                                            ]))
+                                        ->all(),
+                                ]),
                             ]),
                     ]),
             ]);
+    }
+
+    protected static function getOpeningHoursSchema(string $day): Slider
+    {
+        return
+            Slider::make('opening_hours.' . $day)
+                ->hiddenLabel()
+                ->label(__('filament/places.days.' . $day))
+                ->range(minValue: 0, maxValue: 23)
+                ->step(1)
+                ->tooltips(RawJs::make(<<<'JS'
+                    `${Math.round($value)}:00`
+                JS))
+                ->fillTrack([false, true, false])
+                ->pips(PipsMode::Steps)
+                ->pipsFormatter(RawJs::make(<<<'JS'
+                    `${($value)}:00`
+                JS))
+                ->pipsFilter(RawJs::make(<<<'JS'
+                    ($value === 0 || $value === 23)
+                        ? 2
+                        : -1
+                    JS));
     }
 }

@@ -18,13 +18,13 @@ class PlaceSeeder extends Seeder
         }
 
         $openingHoursMain = [
-            'monday' => '06:00-22:00',
-            'tuesday' => '06:00-22:00',
-            'wednesday' => '06:00-22:00',
-            'thursday' => '06:00-22:00',
-            'friday' => '06:00-22:00',
-            'saturday' => '08:00-20:00',
-            'sunday' => '08:00-18:00',
+            'monday' => [8, 20],
+            'tuesday' => [8, 20],
+            'wednesday' => [8, 20],
+            'thursday' => [8, 20],
+            'friday' => [8, 20],
+            'saturday' => [8, 20],
+            'sunday' => [8, 20],
         ];
 
         $place = Place::query()->create([

@@ -13,7 +13,7 @@ return [
         'details' => 'Údaje o pobočce',
         'contact' => 'Kontakt a adresa',
         'opening_hours' => 'Týdenní rozvrh',
-        'opening_hours_description' => 'Kalendář podle toho povolí časy rezervací. Prázdný den znamená zavřeno.',
+        'opening_hours_description' => 'Kalendář podle toho povolí časy rezervací. Pro zavřené dny nastavte 0:00 nebo stejnou otevírací a zavírací dobu.',
     ],
 
     'opening_hours_placeholder' => 'např. 09:00-12:00, 13:00-17:00',
@@ -42,7 +42,7 @@ return [
     ],
 
     'columns' => [
-        'title' => 'Pobočka',
+        'title' => 'Název',
         'company' => 'Firma',
         'city' => 'Město',
         'venues' => 'Prostory',

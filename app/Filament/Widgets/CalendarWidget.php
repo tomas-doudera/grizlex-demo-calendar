@@ -6,6 +6,7 @@ use App\Enums\ReservationStatus;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Models\Venue;
 use App\Settings\CalendarSettings;
 use Carbon\CarbonInterface;
 use Closure;
@@ -55,13 +56,59 @@ class CalendarWidget extends CalMeWidget
                 ->selectablePlaceholder(false)
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state): void {
-                    $set('place_ids', Place::where('company_id', $state ?? null)->pluck('id')->toArray());
+                    $set('place_id', null);
+                    $set('venue_ids', Venue::query()
+                        ->whereHas('place', fn ($q) => $q->where('company_id', $state))
+                        ->pluck('id')
+                        ->toArray());
                 }),
 
-            CheckboxList::make('place_ids')
-                ->label(__('filament/calendar.filters.places'))
-                ->default(fn (Get $get) => Place::where('company_id', $get('company_id'))->pluck('id')->toArray())
-                ->options(fn (Get $get) => Place::where('company_id', $get('company_id'))->pluck('title', 'id')->toArray())
+            Select::make('place_id')
+                ->label(__('filament/calendar.filters.place'))
+                ->options(fn (Get $get) => Place::query()
+                    ->where('company_id', $get('company_id'))
+                    ->where('is_active', true)
+                    ->orderBy('sort_order')
+                    ->orderBy('title')
+                    ->pluck('title', 'id')
+                    ->toArray())
+                ->live()
+                ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
+                    $firstPlace = Place::query()
+                        ->where('company_id', $state)   
+                        ->where('is_active', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('title')
+                        ->value('id');
+
+                    $set('place_id', $firstPlace);
+
+                    $set('venue_ids', Venue::query()
+                        ->whereHas('place', fn ($q) => $q->where('company_id', $state))
+                        ->when(filled($firstPlace), fn ($q) => $q->where('place_id', $firstPlace))
+                        ->pluck('id')
+                        ->toArray());
+                }),
+
+            CheckboxList::make('venue_ids')
+                ->label(__('filament/calendar.filters.venues'))
+                ->default(fn (Get $get) => Venue::query()
+                    ->withActivePlace()
+                    ->whereHas('place', fn ($q) => $q->where('company_id', $get('company_id')))
+                    ->pluck('id')
+                    ->toArray())
+                ->options(function (Get $get) {
+                    $query = Venue::query()
+                        ->withActivePlace()
+                        ->whereHas('place', fn ($q) => $q->where('company_id', $get('company_id')));
+                    $placeId = $get('place_id');
+                    if (filled($placeId)) {
+                        $query->where('place_id', $placeId);
+                    }
+
+                    return $query->orderBy('sort_order')->orderBy('title')->get()
+                        ->mapWithKeys(fn (Venue $v) => [$v->id => $v->title]);
+                })
                 ->bulkToggleable()
                 ->live(),
         ]);
@@ -75,27 +122,24 @@ class CalendarWidget extends CalMeWidget
     #[Computed]
     protected function getResources(): array
     {
-        return Place::query()
-            ->where('company_id', $this->getCompanyId() ?? null)
-            ->whereIn('id', $this->filters['place_ids'] ?? [])
-            ->pluck('title', 'id')
+        $venueIds = $this->filters['venue_ids'] ?? [];
+        if ($venueIds === []) {
+            return [];
+        }
+
+        return Venue::query()
+            ->join('places', 'venues.place_id', '=', 'places.id')
+            ->whereIn('venues.id', $venueIds)
+            ->where('places.company_id', $this->getCompanyId())
+            ->orderBy('places.sort_order')
+            ->orderBy('venues.sort_order')
+            ->orderBy('venues.title')
+            ->select('venues.*')
+            ->get()
+            ->mapWithKeys(fn (Venue $v) => [$v->id => $v->title])
             ->toArray();
     }
 
-    // #[Computed]
-    // protected function getResourceMeta(): array
-    // {
-    //     return Place::query()
-    //         ->whereIn('id', array_keys($this->getResources))
-    //         ->get()
-    //         ->keyBy('id')
-    //         ->map(fn (Place $place) => [
-    //             'avatar_url' => $place->image_url,
-    //             'color'      => $place->color,
-    //             'initials'   => mb_strtoupper(mb_substr($place->short_title ?? $place->title, 0, 2)),
-    //         ])
-    //         ->toArray();
-    // }
     protected function createEventFrom(array $arguments): array
     {
         $companyId = $this->getCompanyId();
@@ -112,9 +156,18 @@ class CalendarWidget extends CalMeWidget
                                 ->disabled()
                                 ->dehydrated()
                                 ->required(),
-                            Select::make('place_id')
-                                ->label(__('filament/calendar.form.place'))
-                                ->options(Place::where('company_id', $companyId)->pluck('title', 'id'))
+                            Select::make('venue_id')
+                                ->label(__('filament/calendar.form.venue'))
+                                ->options(fn () => Venue::query()
+                                    ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                                    ->when(
+                                        $this->filters['venue_ids'] ?? null,
+                                        fn ($q, $ids) => $q->whereIn('id', $ids)
+                                    )
+                                    ->orderBy('sort_order')
+                                    ->orderBy('title')
+                                    ->get()
+                                    ->mapWithKeys(fn (Venue $v) => [$v->id => $v->title]))
                                 ->default($arguments['resource_id'] ?? null)
                                 ->live()
                                 ->required(),
@@ -136,11 +189,11 @@ class CalendarWidget extends CalMeWidget
                                 ->live()
                                 ->required()
                                 ->rules([
-                                    function () {
-                                        return function (string $attribute, $value, Closure $fail): void {
+                                    function (Get $get) {
+                                        return function (string $attribute, $value, Closure $fail) use ($get): void {
                                             $time = Carbon::parse($value);
                                             $dayOfWeek = $time->format('l');
-                                            $openingHours = $this->getOpeningHours();
+                                            $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
                                             $hours = $openingHours[$dayOfWeek] ?? null;
 
                                             if (! $hours || $hours['max'] === 0) {
@@ -167,11 +220,11 @@ class CalendarWidget extends CalMeWidget
                                 ->live()
                                 ->required()
                                 ->rules([
-                                    function () {
-                                        return function (string $attribute, $value, Closure $fail): void {
+                                    function (Get $get) {
+                                        return function (string $attribute, $value, Closure $fail) use ($get): void {
                                             $time = Carbon::parse($value);
                                             $dayOfWeek = $time->format('l');
-                                            $openingHours = $this->getOpeningHours();
+                                            $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
                                             $hours = $openingHours[$dayOfWeek] ?? null;
 
                                             if (! $hours || $hours['max'] === 0) {
@@ -196,13 +249,13 @@ class CalendarWidget extends CalMeWidget
                                                 return;
                                             }
 
-                                            $placeId = $get('place_id');
+                                            $venueId = $get('venue_id');
 
-                                            if (! $placeId) {
+                                            if (! $venueId) {
                                                 return;
                                             }
 
-                                            $query = Reservation::where('place_id', $placeId)
+                                            $query = Reservation::where('venue_id', $venueId)
                                                 ->where(function ($q) use ($fromTime, $toTime) {
                                                     $q->where('from_time', '<', $toTime)
                                                         ->where('to_time', '>', $fromTime);
@@ -228,20 +281,22 @@ class CalendarWidget extends CalMeWidget
                         ->numeric()
                         ->minValue(0)
                         ->maxValue(function (Get $get): ?int {
-                            $placeId = $get('place_id');
-                            if (! $placeId) {
+                            $venueId = $get('venue_id');
+                            if (! $venueId) {
                                 return null;
                             }
 
-                            return Place::query()->find($placeId)?->capacity;
+                            return Venue::query()->find($venueId)?->capacity;
                         })
                         ->placeholder(function (Get $get): ?string {
-                            $placeId = $get('place_id');
-                            if (! $placeId) {
+                            $venueId = $get('venue_id');
+                            if (! $venueId) {
                                 return null;
                             }
 
-                            return 'Max: '.Place::query()->find($placeId)?->capacity;
+                            $cap = Venue::query()->find($venueId)?->capacity;
+
+                            return $cap !== null ? 'Max: '.$cap : null;
                         })
                         ->nullable(),
                     TextInput::make('booked_count')
@@ -279,14 +334,46 @@ class CalendarWidget extends CalMeWidget
 
     protected function getTitle(): ?string
     {
-        return $this->getCompanyTitle();
+        return $this->getPlaceTitle();
     }
 
-    protected function getCompanyTitle(): ?string
+    protected function getPlaceTitle(): ?string
     {
         $companyId = $this->getCompanyId();
 
-        return Company::find($companyId)?->title ?? null;
+        if ($companyId === null) {
+            return null;
+        }
+
+        $placeIdFromFilter = $this->filters['place_id'] ?? null;
+        $venueIds = array_values(array_filter($this->filters['venue_ids'] ?? []));
+
+        if (filled($placeIdFromFilter)) {
+            $placeIds = [(int) $placeIdFromFilter];
+        } elseif ($venueIds !== []) {
+            $placeIds = Venue::query()
+                ->whereIn('id', $venueIds)
+                ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                ->pluck('place_id')
+                ->unique()
+                ->values()
+                ->all();
+        } else {
+            return __('filament/calendar.title_all_places');
+        }
+
+        $titles = Place::query()
+            ->where('company_id', $companyId)
+            ->whereIn('id', $placeIds)
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->pluck('title');
+
+        if ($titles->isEmpty()) {
+            return null;
+        }
+
+        return $titles->implode(', ');
     }
 
     protected function editEventFrom(array $arguments): array
@@ -319,7 +406,8 @@ class CalendarWidget extends CalMeWidget
 
     protected function validateUpdate(CarbonInterface $fromTime, CarbonInterface $toTime, int $eventId, int $resourceId): bool
     {
-        $openingHours = $this->getOpeningHours();
+        $venue = Venue::with('place')->find($resourceId);
+        $openingHours = $venue?->place?->openingHoursForCalendarWeek() ?? $this->fallbackFullDayHours();
         $dayOfWeek = $fromTime->format('l');
 
         if (! isset($openingHours[$dayOfWeek])) {
@@ -357,7 +445,7 @@ class CalendarWidget extends CalMeWidget
         }
 
         $overlaps = Reservation::where('id', '!=', $eventId)
-            ->where('place_id', $resourceId)
+            ->where('venue_id', $resourceId)
             ->where(function ($query) use ($fromTime, $toTime) {
                 $query->where('from_time', '<', $toTime)
                     ->where('to_time', '>', $fromTime);
@@ -381,7 +469,7 @@ class CalendarWidget extends CalMeWidget
         }
 
         return Reservation::query()
-            ->with(['place', 'staff'])
+            ->with(['venue.place', 'staff'])
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('from_time', [$startDate, $endDate])
                     ->orWhereBetween('to_time', [$startDate, $endDate])
@@ -394,9 +482,9 @@ class CalendarWidget extends CalMeWidget
                 $this->getCompanyId(),
                 fn ($query, $companyId) => $query->where('company_id', $companyId)
             )
-            ->when(
-                $this->filters['place_ids'] ?? null,
-                fn ($query, $placeIds) => $query->whereIn('place_id', $placeIds)
+            ->whereIn(
+                'venue_id',
+                array_values(array_filter($this->filters['venue_ids'] ?? []))
             )
             ->get();
 
@@ -408,26 +496,102 @@ class CalendarWidget extends CalMeWidget
     }
 
     /**
-     * Interim: full-day window until opening hours are loaded per Place (or Company).
+     * Used by CalMe for multi-day event parsing and week grid. Hodiny z vybraných poboček (filtr místo / venue), jinak fallback.
      *
      * @return array<string, array{min: int, max: int}>
      */
     #[Computed]
     protected function getOpeningHours(): array
     {
-        return once(function (): array {
-            $day = ['min' => 0, 'max' => 24];
+        $companyId = $this->getCompanyId();
 
-            return [
-                'Monday' => $day,
-                'Tuesday' => $day,
-                'Wednesday' => $day,
-                'Thursday' => $day,
-                'Friday' => $day,
-                'Saturday' => $day,
-                'Sunday' => $day,
-            ];
-        });
+        if ($companyId === null) {
+            return $this->fallbackFullDayHours();
+        }
+
+        $placeIds = $this->resolvePlaceIdsForOpeningHours();
+
+        if ($placeIds === []) {
+            return $this->fallbackFullDayHours();
+        }
+
+        $places = Place::query()
+            ->where('company_id', $companyId)
+            ->whereIn('id', $placeIds)
+            ->get();
+
+        if ($places->isEmpty()) {
+            return $this->fallbackFullDayHours();
+        }
+        return Place::mergeOpeningHoursForCalendarWeek($places);
+    }
+
+    /**
+     * @return list<int>
+     */
+    protected function resolvePlaceIdsForOpeningHours(): array
+    {
+        $companyId = $this->getCompanyId();
+
+        if ($companyId === null) {
+            return [];
+        }
+
+        $placeIdFromFilter = $this->filters['place_id'] ?? null;
+        $venueIds = array_values(array_filter($this->filters['venue_ids'] ?? []));
+
+        if (filled($placeIdFromFilter)) {
+            return [(int) $placeIdFromFilter];
+        }
+
+        if ($venueIds !== []) {
+            return Venue::query()
+                ->whereIn('id', $venueIds)
+                ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                ->pluck('place_id')
+                ->unique()
+                ->values()
+                ->all();
+        }
+
+        return Place::query()
+            ->where('company_id', $companyId)
+            ->orderBy('sort_order')
+            ->orderBy('title')
+            ->pluck('id')
+            ->all();
+    }
+
+    /**
+     * @return array<string, array{min: int, max: int}>
+     */
+    protected function openingHoursForVenueId(?int $venueId): array
+    {
+        if (! $venueId) {
+            return $this->fallbackFullDayHours();
+        }
+
+        $venue = Venue::with('place')->find($venueId);
+
+        return $venue?->place?->openingHoursForCalendarWeek() ?? $this->fallbackFullDayHours();
+    }
+
+    /**
+     * @return array<string, array{min: int, max: int}>
+     */
+    protected function fallbackFullDayHours(): array
+    {
+        $day = ['min' => 0, 'max' => 24];
+
+        return [
+            'Monday' => $day,
+            'Tuesday' => $day,
+            'Wednesday' => $day,
+            'Thursday' => $day,
+            'Friday' => $day,
+            'Saturday' => $day,
+            'Sunday' => $day,
+        ];
     }
 
     protected function getWidgetCellDimensions(string $view): array
@@ -454,6 +618,6 @@ class CalendarWidget extends CalMeWidget
 
     protected function getResourceAttribute(): string
     {
-        return 'place_id';
+        return 'venue_id';
     }
 }

@@ -39,49 +39,40 @@ class Place extends Model
     }
 
     /**
-     * Formát očekávaný kalendářem (klíče Monday..Sunday, min/max hodiny z prvního intervalu dne).
-     *
      * @return array<string, array{min: int, max: int}>
      */
     public function openingHoursForCalendarWeek(): array
     {
         $hours = $this->opening_hours ?? [];
         $dayKeys = [
-            'monday' => 'Monday',
-            'tuesday' => 'Tuesday',
+            'monday'    => 'Monday',
+            'tuesday'   => 'Tuesday',
             'wednesday' => 'Wednesday',
-            'thursday' => 'Thursday',
-            'friday' => 'Friday',
-            'saturday' => 'Saturday',
-            'sunday' => 'Sunday',
+            'thursday'  => 'Thursday',
+            'friday'    => 'Friday',
+            'saturday'  => 'Saturday',
+            'sunday'    => 'Sunday',
         ];
+
         $out = [];
         foreach ($dayKeys as $jsonKey => $calendarKey) {
-            $val = $hours[$jsonKey] ?? '';
-            if (trim((string) $val) === '') {
-                $out[$calendarKey] = ['min' => 0, 'max' => 0];
-
-                continue;
-            }
-            if (preg_match('/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/', (string) $val, $m)) {
-                $out[$calendarKey] = ['min' => (int) $m[1], 'max' => (int) $m[3]];
-            } else {
-                $out[$calendarKey] = ['min' => 0, 'max' => 24];
-            }
+            $val = $hours[$jsonKey] ?? [0, 0];
+            $out[$calendarKey] = [
+                'min' => (int) ($val[0] ?? 0),
+                'max' => (int) ($val[1] ?? 0),
+            ];
         }
-
         return $out;
     }
 
     /**
-     * Sloučí týdenní otevírací hodiny více poboček pro jeden kalendář (po dnech: nejdřívější min a nejpozdější max mezi pobočkami, které mají ten den otevřeno).
-     *
      * @param  iterable<int, Place>  $places
      * @return array<string, array{min: int, max: int}>
      */
     public static function mergeOpeningHoursForCalendarWeek(iterable $places): array
     {
         $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
         $weeks = [];
         foreach ($places as $place) {
             $weeks[] = $place->openingHoursForCalendarWeek();
@@ -106,7 +97,6 @@ class Place extends Model
                 ];
             }
         }
-
         return $merged;
     }
 
