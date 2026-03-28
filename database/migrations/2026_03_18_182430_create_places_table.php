@@ -23,6 +23,7 @@ return new class extends Migration
             $table->unsignedInteger('sort_order')->default(0);
             $table->json('opening_hours')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -18,6 +18,8 @@ class PlacesTable
     {
         return $table
             ->columns([
+                ToggleColumn::make('is_active')
+                    ->label(__('filament/places.columns.active')),
                 TextColumn::make('title')
                     ->label(__('filament/places.columns.title'))
                     ->searchable()
@@ -26,18 +28,22 @@ class PlacesTable
                 TextColumn::make('company.title')
                     ->label(__('filament/places.columns.company'))
                     ->sortable(),
-                TextColumn::make('city')
-                    ->label(__('filament/places.columns.city'))
-                    ->searchable()
-                    ->toggleable(),
                 TextColumn::make('venues_count')
                     ->counts('venues')
                     ->label(__('filament/places.columns.venues'))
                     ->badge()
                     ->color('info')
                     ->toggleable(),
-                ToggleColumn::make('is_active')
-                    ->label(__('filament/places.columns.active')),
+                TextColumn::make('city')
+                    ->label(__('filament/places.columns.city'))
+                    ->searchable()
+                    ->toggleable(),
+                TextColumn::make('created_at')
+                    ->label(__('filament/places.columns.created_at'))
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+
             ])
             ->filters([
                 SelectFilter::make('company')

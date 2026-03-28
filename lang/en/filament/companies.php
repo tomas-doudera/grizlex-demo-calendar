@@ -34,7 +34,7 @@ return [
     ],
 
     'columns' => [
-        'title' => 'Title',
+        'title' => 'Name',
         'places' => 'Places',
         'active' => 'Active',
         'created_at' => 'Created',

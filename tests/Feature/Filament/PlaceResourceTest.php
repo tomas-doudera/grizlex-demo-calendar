@@ -52,17 +52,19 @@ it('can create a place', function () {
 it('can update a place', function () {
     $place = Place::factory()->create(['phone' => null]);
 
+    $closedDay = [0, 0];
+
     Livewire::test(EditPlace::class, ['record' => $place->getRouteKey()])
         ->fillForm([
             'title' => 'Updated Branch',
             'opening_hours' => [
-                'monday' => '09:00-12:00, 13:00-17:00',
-                'tuesday' => '',
-                'wednesday' => '',
-                'thursday' => '',
-                'friday' => '',
-                'saturday' => '',
-                'sunday' => '',
+                'monday' => [9, 17],
+                'tuesday' => $closedDay,
+                'wednesday' => $closedDay,
+                'thursday' => $closedDay,
+                'friday' => $closedDay,
+                'saturday' => $closedDay,
+                'sunday' => $closedDay,
             ],
         ])
         ->call('save')
@@ -71,5 +73,5 @@ it('can update a place', function () {
     $place->refresh();
 
     expect($place->title)->toBe('Updated Branch')
-        ->and($place->opening_hours['monday'])->toBe('09:00-12:00, 13:00-17:00');
+        ->and($place->opening_hours['monday'])->toBe([9, 17]);
 });

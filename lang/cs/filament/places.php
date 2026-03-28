@@ -6,12 +6,18 @@ return [
 
     'tabs' => [
         'general' => 'Obecné',
+        'address' => 'Adresa',
+        'preferences' => 'Předvolby',
         'opening_hours' => 'Otevírací hodiny',
     ],
 
     'sections' => [
         'details' => 'Údaje o pobočce',
-        'contact' => 'Kontakt a adresa',
+        'basic_info' => 'Základní údaje',
+        'contact' => 'Kontakt',
+        'address' => 'Adresa',
+        'location' => 'Umístění',
+        'preferences' => 'Předvolby',
         'opening_hours' => 'Týdenní rozvrh',
         'opening_hours_description' => 'Kalendář podle toho povolí časy rezervací. Pro zavřené dny nastavte 0:00 nebo stejnou otevírací a zavírací dobu.',
     ],
@@ -39,6 +45,7 @@ return [
         'country' => 'Země',
         'description' => 'Popis',
         'is_active' => 'Aktivní',
+        'sort_order' => 'Pořadí řazení',
     ],
 
     'columns' => [
@@ -47,6 +54,7 @@ return [
         'city' => 'Město',
         'venues' => 'Prostory',
         'active' => 'Aktivní',
+        'created_at' => 'Vytvořeno',
     ],
 
     'filters' => [

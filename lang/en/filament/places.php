@@ -6,12 +6,18 @@ return [
 
     'tabs' => [
         'general' => 'General',
+        'address' => 'Address',
+        'preferences' => 'Preferences',
         'opening_hours' => 'Opening hours',
     ],
 
     'sections' => [
         'details' => 'Place details',
-        'contact' => 'Contact & address',
+        'basic_info' => 'Basic Info',
+        'contact' => 'Contact',
+        'address' => 'Address',
+        'location' => 'Location',
+        'preferences' => 'Preferences',
         'opening_hours' => 'Weekly schedule',
         'opening_hours_description' => 'Used by the calendar for allowed booking times. For closed days, set both handles to 0:00, or use the same opening and closing time.',
     ],
@@ -37,6 +43,7 @@ return [
         'country' => 'Country',
         'description' => 'Description',
         'is_active' => 'Active',
+        'sort_order' => 'Sort order',
     ],
 
     'columns' => [
@@ -45,6 +52,7 @@ return [
         'city' => 'City',
         'venues' => 'Venues',
         'active' => 'Active',
+        'created_at' => 'Created',
     ],
 
     'filters' => [
