@@ -24,12 +24,13 @@ return [
     ],
 
     'columns' => [
-        'title' => 'Služba',
+        'title' => 'Název',
         'company' => 'Firma',
         'duration' => 'Délka trvání',
         'sort_order' => 'Pořadí',
         'active' => 'Aktivní',
         'reservations' => 'Rezervace',
+        'created_at' => 'Vytvořeno',
     ],
 
     'filters' => [

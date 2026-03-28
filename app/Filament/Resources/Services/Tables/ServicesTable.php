@@ -6,7 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\ColorColumn;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -20,6 +20,8 @@ class ServicesTable
             ->columns([
                 ColorColumn::make('color')
                     ->label(''),
+                ToggleColumn::make('is_active')
+                    ->label(__('filament/services.columns.active')),
                 TextColumn::make('title')
                     ->label(__('filament/services.columns.title'))
                     ->searchable()
@@ -36,14 +38,16 @@ class ServicesTable
                     ->label(__('filament/services.fields.price'))
                     ->money('USD')
                     ->sortable(),
-                IconColumn::make('is_active')
-                    ->boolean()
-                    ->label(__('filament/services.columns.active')),
                 TextColumn::make('reservations_count')
                     ->counts('reservations')
                     ->label(__('filament/services.columns.reservations'))
                     ->badge()
                     ->color('info')
+                    ->toggleable(),
+                TextColumn::make('created_at')
+                    ->label(__('filament/services.columns.created_at'))
+                    ->dateTime()
+                    ->sortable()
                     ->toggleable(),
             ])
             ->filters([

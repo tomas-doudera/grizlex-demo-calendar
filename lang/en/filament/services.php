@@ -24,12 +24,13 @@ return [
     ],
 
     'columns' => [
-        'title' => 'Service',
+        'title' => 'Name',
         'company' => 'Company',
         'duration' => 'Duration',
         'sort_order' => 'Sort',
         'active' => 'Active',
         'reservations' => 'Reservations',
+        'created_at' => 'Created',
     ],
 
     'filters' => [
