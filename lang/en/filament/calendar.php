@@ -31,6 +31,7 @@ return [
         'customer_email' => 'Customer Email',
         'customer_phone' => 'Customer Phone',
         'notes' => 'Notes',
+        'summary' => 'Reservation Summary',
     ],
     'actions' => [
         'delete' => 'Delete',

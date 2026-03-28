@@ -31,6 +31,7 @@ return [
         'customer_email' => 'E-mail zákazníka',
         'customer_phone' => 'Telefon zákazníka',
         'notes' => 'Poznámky',
+        'summary' => 'Přehled rezervace',
     ],
     'actions' => [
         'delete' => 'Smazat',

@@ -2,10 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use App\Enums\ReservationStatus;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
+use App\Models\Service;
 use App\Models\Venue;
 use App\Settings\CalendarSettings;
 use Carbon\CarbonInterface;
@@ -16,9 +16,10 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Computed;
 use TomasDoudera\CalMe\Widgets\CalMeWidget;
+use App\Enums\ReservationStatus;
 
 class CalendarWidget extends CalMeWidget
 {
@@ -76,7 +78,7 @@ class CalendarWidget extends CalMeWidget
                 ->live()
                 ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
                     $firstPlace = Place::query()
-                        ->where('company_id', $state)   
+                        ->where('company_id', $state)
                         ->where('is_active', true)
                         ->orderBy('sort_order')
                         ->orderBy('title')
@@ -148,190 +150,205 @@ class CalendarWidget extends CalMeWidget
         $companyId = $this->getCompanyId();
 
         return [
-            Grid::make()
+            Grid::make(3)
                 ->schema([
-                    Fieldset::make(__('filament/calendar.form.booking_details'))
+                    Grid::make(1)
+                        ->columnSpan(2)
                         ->schema([
-                            Select::make('company_id')
-                                ->label(__('filament/calendar.form.company'))
-                                ->options(Company::pluck('title', 'id'))
-                                ->default($companyId)
-                                ->disabled()
-                                ->dehydrated()
-                                ->required(),
-                            Select::make('venue_id')
-                                ->label(__('filament/calendar.form.venue'))
-                                ->options(fn () => Venue::query()
-                                    ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
-                                    ->when(
-                                        $this->filters['venue_ids'] ?? null,
-                                        fn ($q, $ids) => $q->whereIn('id', $ids)
-                                    )
-                                    ->orderBy('sort_order')
-                                    ->orderBy('title')
-                                    ->get()
-                                    ->mapWithKeys(fn (Venue $v) => [$v->id => $v->title]))
-                                ->default($arguments['resource_id'] ?? null)
-                                ->live()
-                                ->required(),
-                            Select::make('staff_id')
-                                ->label(__('filament/reservations.fields.staff'))
-                                ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
-                                ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
-                                ->searchable(['first_name', 'last_name'])
-                                ->preload(),
-                        ]),
-                    Fieldset::make(__('filament/calendar.form.time'))
-                        ->schema([
-                            DateTimePicker::make('from_time')
-                                ->label(__('filament/calendar.form.start'))
-                                ->default($arguments['from_time'] ?? null)
-                                ->native(false)
-                                ->withoutSeconds()
-                                ->minutesStep(5)
-                                ->live()
-                                ->required()
-                                ->rules([
-                                    function (Get $get) {
-                                        return function (string $attribute, $value, Closure $fail) use ($get): void {
-                                            $time = Carbon::parse($value);
-                                            $dayOfWeek = $time->format('l');
-                                            $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
-                                            $hours = $openingHours[$dayOfWeek] ?? null;
+                            Fieldset::make(__('filament/calendar.form.time'))
+                                ->extraAttributes(['class' => 'ring-2 ring-primary-500/50'])
+                                ->schema([
+                                    DateTimePicker::make('from_time')
+                                        ->label(__('filament/calendar.form.start'))
+                                        ->default($arguments['from_time'] ?? null)
+                                        ->native(false)
+                                        ->withoutSeconds()
+                                        ->minutesStep(5)
+                                        ->live()
+                                        ->required()
+                                        ->rules([
+                                            function (Get $get) {
+                                                return function (string $attribute, $value, Closure $fail) use ($get): void {
+                                                    $time = Carbon::parse($value);
+                                                    $dayOfWeek = $time->format('l');
+                                                    $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
+                                                    $hours = $openingHours[$dayOfWeek] ?? null;
 
-                                            if (! $hours || $hours['max'] === 0) {
-                                                $fail(__('filament/calendar.validation.venue_closed', ['day' => $dayOfWeek]));
+                                                    if (! $hours || $hours['max'] === 0) {
+                                                        $fail(__('filament/calendar.validation.venue_closed', ['day' => $dayOfWeek]));
 
-                                                return;
-                                            }
+                                                        return;
+                                                    }
 
-                                            if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
-                                                $fail(__('filament/calendar.validation.time_range', ['min' => $hours['min'], 'max' => $hours['max']]));
-                                            }
-                                        };
-                                    },
-                                ])
-                                ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old): void {
-                                    $this->recalculateToTime($get, $set, Carbon::parse($old ?? $state));
-                                }),
-                            DateTimePicker::make('to_time')
-                                ->label(__('filament/calendar.form.end'))
-                                ->default(isset($arguments['from_time']) ? Carbon::parse($arguments['from_time'])->addHour() : null)
-                                ->native(false)
-                                ->withoutSeconds()
-                                ->minutesStep(5)
-                                ->live()
-                                ->required()
-                                ->rules([
-                                    function (Get $get) {
-                                        return function (string $attribute, $value, Closure $fail) use ($get): void {
-                                            $time = Carbon::parse($value);
-                                            $dayOfWeek = $time->format('l');
-                                            $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
-                                            $hours = $openingHours[$dayOfWeek] ?? null;
+                                                    if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
+                                                        $fail(__('filament/calendar.validation.time_range', ['min' => $hours['min'], 'max' => $hours['max']]));
+                                                    }
+                                                };
+                                            },
+                                        ])
+                                        ->afterStateUpdated(function (Get $get, Set $set, ?string $state, ?string $old): void {
+                                            $this->recalculateToTime($get, $set, Carbon::parse($old ?? $state));
+                                        }),
+                                    DateTimePicker::make('to_time')
+                                        ->label(__('filament/calendar.form.end'))
+                                        ->default(isset($arguments['from_time']) ? Carbon::parse($arguments['from_time'])->addHour() : null)
+                                        ->native(false)
+                                        ->withoutSeconds()
+                                        ->minutesStep(5)
+                                        ->live()
+                                        ->required()
+                                        ->rules([
+                                            function (Get $get) {
+                                                return function (string $attribute, $value, Closure $fail) use ($get): void {
+                                                    $time = Carbon::parse($value);
+                                                    $dayOfWeek = $time->format('l');
+                                                    $openingHours = $this->openingHoursForVenueId((int) $get('venue_id'));
+                                                    $hours = $openingHours[$dayOfWeek] ?? null;
 
-                                            if (! $hours || $hours['max'] === 0) {
-                                                $fail(__('filament/calendar.validation.venue_closed', ['day' => $dayOfWeek]));
+                                                    if (! $hours || $hours['max'] === 0) {
+                                                        $fail(__('filament/calendar.validation.venue_closed', ['day' => $dayOfWeek]));
 
-                                                return;
-                                            }
+                                                        return;
+                                                    }
 
-                                            if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
-                                                $fail(__('filament/calendar.validation.time_range', ['min' => $hours['min'], 'max' => $hours['max']]));
-                                            }
-                                        };
-                                    },
-                                    function (Get $get, ?Model $record) {
-                                        return function (string $attribute, $value, Closure $fail) use ($get, $record): void {
-                                            $fromTime = Carbon::parse($get('from_time'));
-                                            $toTime = Carbon::parse($value);
+                                                    if ($time->hour < $hours['min'] || $time->hour >= $hours['max']) {
+                                                        $fail(__('filament/calendar.validation.time_range', ['min' => $hours['min'], 'max' => $hours['max']]));
+                                                    }
+                                                };
+                                            },
+                                            function (Get $get, ?Model $record) {
+                                                return function (string $attribute, $value, Closure $fail) use ($get, $record): void {
+                                                    $fromTime = Carbon::parse($get('from_time'));
+                                                    $toTime = Carbon::parse($value);
 
-                                            if ($toTime->isBefore($fromTime)) {
-                                                $fail(__('filament/calendar.validation.end_after_start'));
+                                                    if ($toTime->isBefore($fromTime)) {
+                                                        $fail(__('filament/calendar.validation.end_after_start'));
 
-                                                return;
-                                            }
+                                                        return;
+                                                    }
 
-                                            $venueId = $get('venue_id');
+                                                    $venueId = $get('venue_id');
 
-                                            if (! $venueId) {
-                                                return;
-                                            }
+                                                    if (! $venueId) {
+                                                        return;
+                                                    }
 
-                                            $query = Reservation::where('venue_id', $venueId)
-                                                ->where(function ($q) use ($fromTime, $toTime) {
-                                                    $q->where('from_time', '<', $toTime)
-                                                        ->where('to_time', '>', $fromTime);
-                                                });
+                                                    $query = Reservation::where('venue_id', $venueId)
+                                                        ->where(function ($q) use ($fromTime, $toTime) {
+                                                            $q->where('from_time', '<', $toTime)
+                                                                ->where('to_time', '>', $fromTime);
+                                                        });
 
-                                            if ($record?->getKey()) {
-                                                $query->where('id', '!=', $record->getKey());
-                                            }
+                                                    if ($record?->getKey()) {
+                                                        $query->where('id', '!=', $record->getKey());
+                                                    }
 
-                                            if ($query->exists()) {
-                                                $fail(__('filament/calendar.validation.time_occupied'));
-                                            }
-                                        };
-                                    },
+                                                    if ($query->exists()) {
+                                                        $fail(__('filament/calendar.validation.time_occupied'));
+                                                    }
+                                                };
+                                            },
+                                        ]),
                                 ]),
+                            Fieldset::make(__('filament/calendar.form.booking_details'))
+                                ->schema([
+                                    Select::make('company_id')
+                                        ->label(__('filament/calendar.form.company'))
+                                        ->options(Company::pluck('title', 'id'))
+                                        ->default($companyId)
+                                        ->disabled()
+                                        ->dehydrated()
+                                        ->required(),
+                                    Select::make('venue_id')
+                                        ->label(__('filament/calendar.form.venue'))
+                                        ->options(fn () => Venue::query()
+                                            ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                                            ->when(
+                                                $this->filters['venue_ids'] ?? null,
+                                                fn ($q, $ids) => $q->whereIn('id', $ids)
+                                            )
+                                            ->orderBy('sort_order')
+                                            ->orderBy('title')
+                                            ->get()
+                                            ->mapWithKeys(fn (Venue $v) => [$v->id => $v->title]))
+                                        ->default($arguments['resource_id'] ?? null)
+                                        ->live()
+                                        ->required(),
+                                    Select::make('staff_id')
+                                        ->label(__('filament/reservations.fields.staff'))
+                                        ->relationship('staff', 'first_name', fn ($query) => $query->bookable())
+                                        ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
+                                        ->searchable(['first_name', 'last_name'])
+                                        ->preload(),
+                                    Select::make('service_id')
+                                        ->label(__('filament/reservations.fields.service'))
+                                        ->options(fn () => Service::query()
+                                            ->where('company_id', $companyId)
+                                            ->where('is_active', true)
+                                            ->orderBy('sort_order')
+                                            ->orderBy('title')
+                                            ->pluck('title', 'id'))
+                                        ->searchable()
+                                        ->preload(),
+                                ]),
+                            Fieldset::make(__('filament/calendar.form.capacity_section'))
+                                ->schema([
+                                    TextInput::make('capacity')
+                                        ->label(__('filament/calendar.form.capacity'))
+                                        ->numeric()
+                                        ->minValue(0)
+                                        ->maxValue(function (Get $get): ?int {
+                                            $venueId = $get('venue_id');
+                                            if (! $venueId) {
+                                                return null;
+                                            }
+
+                                            return Venue::query()->find($venueId)?->capacity;
+                                        })
+                                        ->placeholder(function (Get $get): ?string {
+                                            $venueId = $get('venue_id');
+                                            if (! $venueId) {
+                                                return null;
+                                            }
+
+                                            $cap = Venue::query()->find($venueId)?->capacity;
+
+                                            return $cap !== null ? 'Max: '.$cap : null;
+                                        })
+                                        ->nullable(),
+                                    TextInput::make('booked_count')
+                                        ->label(__('filament/calendar.form.booked_count'))
+                                        ->numeric()
+                                        ->minValue(0)
+                                        ->maxValue(fn (Get $get) => $get('capacity'))
+                                        ->default(0)
+                                        ->nullable(),
+                                ])->columns(2),
                         ]),
-                ])
-                ->columns(2),
-            Fieldset::make(__('filament/calendar.form.capacity_section'))
-                ->schema([
-                    TextInput::make('capacity')
-                        ->label(__('filament/calendar.form.capacity'))
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(function (Get $get): ?int {
-                            $venueId = $get('venue_id');
-                            if (! $venueId) {
-                                return null;
-                            }
-
-                            return Venue::query()->find($venueId)?->capacity;
-                        })
-                        ->placeholder(function (Get $get): ?string {
-                            $venueId = $get('venue_id');
-                            if (! $venueId) {
-                                return null;
-                            }
-
-                            $cap = Venue::query()->find($venueId)?->capacity;
-
-                            return $cap !== null ? 'Max: '.$cap : null;
-                        })
-                        ->nullable(),
-                    TextInput::make('booked_count')
-                        ->label(__('filament/calendar.form.booked_count'))
-                        ->numeric()
-                        ->minValue(0)
-                        ->maxValue(fn (Get $get) => $get('capacity'))
-                        ->default(0)
-                        ->nullable(),
-                    ToggleButtons::make('status')
-                        ->label(__('filament/calendar.form.status'))
-                        ->options(ReservationStatus::class)
-                        ->default('pending')
-                        ->inline()
-                        ->columnSpanFull(),
-                ])->columns(2),
-            Fieldset::make(__('filament/calendar.form.customer_section'))
-                ->schema([
-                    Select::make('customers')
-                        ->label(__('filament/calendar.form.customers'))
-                        ->relationship(
-                            'customers',
-                            'email',
-                            fn ($query) => $query->orderBy('last_name')->orderBy('first_name'),
-                        )
-                        ->multiple()
-                        ->getOptionLabelFromRecordUsing(
-                            fn ($record) => "{$record->first_name} {$record->last_name} ({$record->email})",
-                        )
-                        ->searchable(['first_name', 'last_name', 'email'])
-                        ->preload(),
-                ])->columns(2),
+                    Fieldset::make(__('filament/calendar.form.summary'))
+                        ->columns(1)
+                        ->schema([
+                            TextEntry::make('summary_venue')
+                                ->label(__('filament/calendar.form.venue'))
+                                ->state(fn (Get $get): string => Venue::find($get('venue_id'))?->title ?? '—'),
+                            TextEntry::make('summary_service')
+                                ->label(__('filament/reservations.fields.service'))
+                                ->state(fn (Get $get): string => Service::find($get('service_id'))?->title ?? '—'),
+                            TextEntry::make('summary_time')
+                                ->label(__('filament/calendar.form.time'))
+                                ->state(fn (Get $get): string => $get('from_time')
+                                    ? Carbon::parse($get('from_time'))->format('M d, H:i')
+                                    : '—'),
+                            TextEntry::make('summary_booked')
+                                ->label(__('filament/calendar.form.booked_count'))
+                                ->state(fn (Get $get): string => ($get('booked_count') ?? 0).' / '.($get('capacity') ?? '—')),
+                            TextEntry::make('summary_status')
+                                ->label(__('filament/calendar.form.status'))
+                                ->state(fn (): string => ReservationStatus::Pending->getLabel())
+                                ->badge()
+                                ->color(ReservationStatus::Pending->getColor()),
+                        ]),
+                ]),
         ];
     }
 
@@ -529,6 +546,7 @@ class CalendarWidget extends CalMeWidget
         if ($places->isEmpty()) {
             return $this->fallbackFullDayHours();
         }
+
         return Place::mergeOpeningHoursForCalendarWeek($places);
     }
 
