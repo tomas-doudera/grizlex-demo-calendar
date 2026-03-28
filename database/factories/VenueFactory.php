@@ -24,6 +24,7 @@ class VenueFactory extends Factory
             'capacity' => fake()->numberBetween(1, 30),
             'is_active' => true,
             'sort_order' => 0,
+            'deleted_at' => null,
         ];
     }
 }

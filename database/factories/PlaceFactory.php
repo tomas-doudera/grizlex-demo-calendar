@@ -37,6 +37,7 @@ class PlaceFactory extends Factory
                 'saturday' => '10:00-14:00',
                 'sunday' => '',
             ],
+            'deleted_at' => null,
         ];
     }
 

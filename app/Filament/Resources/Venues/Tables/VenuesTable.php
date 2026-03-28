@@ -17,6 +17,8 @@ class VenuesTable
     {
         return $table
             ->columns([
+                ToggleColumn::make('is_active')
+                    ->label(__('filament/venues.columns.active')),
                 TextColumn::make('title')
                     ->label(__('filament/venues.columns.title'))
                     ->searchable()
@@ -38,8 +40,6 @@ class VenuesTable
                     ->badge()
                     ->color('info')
                     ->sortable(),
-                ToggleColumn::make('is_active')
-                    ->label(__('filament/venues.columns.active')),
             ])
             ->filters([
                 SelectFilter::make('place')
