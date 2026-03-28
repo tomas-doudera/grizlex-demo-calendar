@@ -19,8 +19,6 @@ class CompanySeeder extends Seeder
             'country' => 'United States',
             'timezone' => 'America/New_York',
             'currency' => 'USD',
-            'opening_time' => '09:00',
-            'closing_time' => '18:00',
         ]);
     }
 }

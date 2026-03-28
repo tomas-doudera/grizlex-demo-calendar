@@ -37,6 +37,16 @@ class Company extends Model
             'is_active' => 'boolean',
         ];
     }
+    protected static function booted(): void
+    {
+        static::saved(function (Company $company) {
+            if (! $company->is_active) {
+                $company->places()->update(['places.is_active' => false]);
+                $company->venues()->update(['venues.is_active' => false]);
+            }
+        });
+    }
+
 
     public function places(): HasMany
     {

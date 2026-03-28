@@ -36,7 +36,9 @@ class Venue extends Model
     {
         return $query
             ->where('venues.is_active', true)
-            ->whereHas('place', fn ($q) => $q->where('places.is_active', true));
+            ->whereHas('place', fn ($q) => $q
+                ->where('places.is_active', true)
+                ->whereHas('company', fn ($c) => $c->where('companies.is_active', true)));
     }
 
     public function place(): BelongsTo

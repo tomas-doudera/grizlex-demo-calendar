@@ -23,9 +23,8 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->string('timezone')->default('Europe/Prague');
             $table->string('currency', 3)->default('CZK');
-            $table->time('opening_time')->nullable();
-            $table->time('closing_time')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

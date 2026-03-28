@@ -28,8 +28,6 @@ class CompanyFactory extends Factory
             'is_active' => true,
             'timezone' => 'Europe/Prague',
             'currency' => 'CZK',
-            'opening_time' => '08:00',
-            'closing_time' => '20:00',
         ];
     }
 

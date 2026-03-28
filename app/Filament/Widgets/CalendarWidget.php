@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Enums\ReservationStatus;
 use App\Models\Company;
 use App\Models\Place;
 use App\Models\Reservation;
@@ -19,7 +20,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -28,7 +28,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Livewire\Attributes\Computed;
 use TomasDoudera\CalMe\Widgets\CalMeWidget;
-use App\Enums\ReservationStatus;
 
 class CalendarWidget extends CalMeWidget
 {
@@ -52,10 +51,15 @@ class CalendarWidget extends CalMeWidget
 
             Select::make('company_id')
                 ->label(__('filament/calendar.filters.company'))
-                ->default(fn () => Company::query()->first()?->id)
-                ->options(fn () => Company::query()->pluck('title', 'id')->toArray())
+                ->default(fn () => Company::query()
+                    ->where('is_active', true)
+                    ->orderBy('id')
+                    ->value('id'))
+                ->options(fn () => Company::query()
+                    ->where('is_active', true)
+                    ->pluck('title', 'id')
+                    ->toArray())
                 ->required()
-                ->selectablePlaceholder(false)
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state): void {
                     $set('place_id', null);
@@ -68,46 +72,49 @@ class CalendarWidget extends CalMeWidget
 
             Select::make('place_id')
                 ->label(__('filament/calendar.filters.place'))
-                ->options(fn (Get $get) => Place::query()
-                    ->where('company_id', $get('company_id'))
-                    ->where('is_active', true)
-                    ->orderBy('sort_order')
-                    ->orderBy('title')
-                    ->pluck('title', 'id')
-                    ->toArray())
-                ->live()
-                ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
-                    $firstPlace = Place::query()
-                        ->where('company_id', $state)
+                ->options(fn (Get $get) => filled($get('company_id'))
+                    ? Place::query()
+                        ->where('company_id', $get('company_id'))
                         ->where('is_active', true)
+                        ->whereHas('company', fn ($q) => $q->where('is_active', true))
                         ->orderBy('sort_order')
                         ->orderBy('title')
-                        ->value('id');
-
-                    $set('place_id', $firstPlace);
+                        ->pluck('title', 'id')
+                        ->toArray()
+                    : [])
+                ->live()
+                ->afterStateUpdated(function (Set $set, Get $get, ?string $state): void {
+                    $companyId = $get('company_id');
 
                     $set('venue_ids', Venue::query()
                         ->withActivePlace()
-                        ->whereHas('place', fn ($q) => $q->where('company_id', $state))
-                        ->when(filled($firstPlace), fn ($q) => $q->where('place_id', $firstPlace))
+                        ->whereHas('place', fn ($q) => $q->where('company_id', $companyId))
+                        ->when(filled($state), fn ($q) => $q->where('place_id', $state))
                         ->pluck('id')
                         ->toArray());
                 }),
 
             CheckboxList::make('venue_ids')
                 ->label(__('filament/calendar.filters.venues'))
-                ->default(fn (Get $get) => Venue::query()
-                    ->withActivePlace()
-                    ->whereHas('place', fn ($q) => $q->where('company_id', $get('company_id')))
-                    ->pluck('id')
-                    ->toArray())
+                ->default(fn (Get $get) => filled($get('company_id'))
+                    ? Venue::query()
+                        ->withActivePlace()
+                        ->whereHas('place', fn ($q) => $q->where('company_id', $get('company_id')))
+                        ->when(filled($get('place_id')), fn ($q) => $q->where('place_id', $get('place_id')))
+                        ->pluck('id')
+                        ->toArray()
+                    : [])
                 ->options(function (Get $get) {
+                    if (! filled($get('company_id'))) {
+                        return [];
+                    }
+
                     $query = Venue::query()
                         ->withActivePlace()
                         ->whereHas('place', fn ($q) => $q->where('company_id', $get('company_id')));
-                    $placeId = $get('place_id');
-                    if (filled($placeId)) {
-                        $query->where('place_id', $placeId);
+
+                    if (filled($get('place_id'))) {
+                        $query->where('place_id', $get('place_id'));
                     }
 
                     return $query->orderBy('sort_order')->orderBy('title')->get()

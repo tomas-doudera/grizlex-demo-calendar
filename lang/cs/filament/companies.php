@@ -4,10 +4,18 @@ return [
     'label' => 'Firma',
     'plural_label' => 'Firmy',
 
-    'sections' => [
-        'details' => 'Údaje o firmě',
+    'tabs' => [
+        'general' => 'Obecné',
         'address' => 'Adresa',
-        'settings' => 'Nastavení',
+        'preferences' => 'Předvolby',
+    ],
+
+    'sections' => [
+        'basic_info' => 'Základní údaje',
+        'contact' => 'Kontakt',
+        'address' => 'Adresa',
+        'location' => 'Umístění',
+        'localization' => 'Lokalizace',
     ],
 
     'fields' => [
@@ -23,12 +31,10 @@ return [
         'is_active' => 'Aktivní',
         'timezone' => 'Časová zóna',
         'currency' => 'Měna',
-        'opening_time' => 'Otevírací doba',
-        'closing_time' => 'Zavírací doba',
     ],
 
     'columns' => [
-        'title' => 'Firma',
+        'title' => 'Název',
         'places' => 'Místa',
         'active' => 'Aktivní',
         'created_at' => 'Vytvořeno',
