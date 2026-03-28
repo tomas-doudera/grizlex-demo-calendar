@@ -18,6 +18,7 @@ return [
         'company' => 'Company',
         'venue' => 'Venue',
         'staff' => 'Trainer',
+        'service' => 'Service',
         'from_time' => 'From',
         'to_time' => 'To',
         'capacity' => 'Capacity',

@@ -18,6 +18,7 @@ return [
         'company' => 'Firma',
         'venue' => 'Prostor',
         'staff' => 'Trenér',
+        'service' => 'Služba',
         'from_time' => 'Od',
         'to_time' => 'Do',
         'capacity' => 'Kapacita',

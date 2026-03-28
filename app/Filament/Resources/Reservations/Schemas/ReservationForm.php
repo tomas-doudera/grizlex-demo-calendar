@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Reservations\Schemas;
 
 use App\Enums\ReservationStatus;
+use App\Models\Service;
 use App\Models\Venue;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
@@ -71,6 +72,24 @@ class ReservationForm
                                                                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->full_name)
                                                                     ->searchable()
                                                                     ->preload(),
+                                                                Select::make('service_id')
+                                                                    ->label(__('filament/reservations.fields.service'))
+                                                                    ->options(function (Get $get) {
+                                                                        $companyId = $get('company_id');
+                                                                        if (! $companyId) {
+                                                                            return [];
+                                                                        }
+
+                                                                        return Service::query()
+                                                                            ->where('company_id', $companyId)
+                                                                            ->where('is_active', true)
+                                                                            ->orderBy('sort_order')
+                                                                            ->orderBy('title')
+                                                                            ->pluck('title', 'id');
+                                                                    })
+                                                                    ->searchable()
+                                                                    ->preload()
+                                                                    ->live(),
                                                             ])->columns(2),
                                                         Section::make(__('filament/reservations.sections.time'))
                                                             ->schema([

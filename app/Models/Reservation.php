@@ -101,7 +101,7 @@ class Reservation extends Model
 
     public function getColorAttribute(): ?string
     {
-        return $this->venue?->color;
+        return $this->service?->color;
     }
 
     public function getStyleAttribute(): ?string
@@ -113,6 +113,6 @@ class Reservation extends Model
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->venue?->image_url;
+        return $this->service?->image_url;
     }
 }
